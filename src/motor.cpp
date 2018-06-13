@@ -4,20 +4,20 @@
 // list of all motor ports
 enum Port: unsigned char
 {
-    DRIVE_LF = 2,
+    DRIVE_RB = 2,
     DRIVE_LB = 3,
     DRIVE_RF = 8,
-    DRIVE_RB = 9
+    DRIVE_LF = 9
 };
 
 void driveLeft(int power)
 {
-    motorSet(DRIVE_LF, -power);
-    motorSet(DRIVE_LB, -power);
+    motorSet(DRIVE_LF, power);
+    motorSet(DRIVE_LB, power);
 }
 
 void driveRight(int power)
 {
-    motorSet(DRIVE_LF, power);
-    motorSet(DRIVE_LB, power);
+    motorSet(DRIVE_RF, -power);
+    motorSet(DRIVE_RB, -power);
 }
