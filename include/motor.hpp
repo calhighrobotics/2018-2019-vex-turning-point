@@ -8,4 +8,7 @@ constexpr unsigned long MOTOR_DELAY = 20; // ms
 void driveLeft(int power);
 void driveRight(int power);
 
+// ball intake
+void ballIntake(int power);
+
 #endif // MOTOR_HPP
