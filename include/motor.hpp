@@ -16,7 +16,9 @@ enum Port: unsigned char
     /** Right front drive. */
     DRIVE_RF = 8,
     /** Right back drive. */
-    DRIVE_RB = 9
+    DRIVE_RB = 9,
+    /** Slip gear puncher. */
+    PUNCHER = 10
 };
 } // end namespace motor
 

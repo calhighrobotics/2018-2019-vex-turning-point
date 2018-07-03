@@ -1,6 +1,7 @@
 #include "main.hpp"
-#include "drive.hpp"
 #include "ballIntake.hpp"
+#include "drive.hpp"
+#include "puncher.hpp"
 
 /** Minimum joystick analog value. Used by {@link deadzone}. */
 static constexpr int DEADZONE = 20;
@@ -35,6 +36,22 @@ void operatorControl()
 		else
 		{
 			ballIntake::set(0);
+		}
+
+		// puncher: 5u/d
+		bool puncherForward = joystickGetDigital(1, 5, JOY_UP);
+		bool puncherBackward = joystickGetDigital(1, 5, JOY_DOWN);
+		if (puncherForward && !puncherBackward)
+		{
+			puncher::set(127);
+		}
+		else if (!puncherForward && puncherBackward)
+		{
+			puncher::set(-127);
+		}
+		else
+		{
+			puncher::set(0);
 		}
 
 		// wait for the motors to update before receiving input again

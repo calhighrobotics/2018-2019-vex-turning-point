@@ -1,6 +1,7 @@
 #ifndef BALLINTAKE_HPP
 #define BALLINTAKE_HPP
 
+/** Ball intake related functions. */
 namespace ballIntake
 {
 /**
