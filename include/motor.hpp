@@ -18,8 +18,29 @@ enum Port: unsigned char
     /** Right back drive. */
     DRIVE_RB = 9,
     /** Slip gear puncher. */
-    PUNCHER = 10
+    PUNCHER = 10,
+    /** Maximum amount of motor ports. */
+    MAX_MOTOR_PORTS = 10
 };
+
+/**
+ * Sets an internal lock to allow a series of calls to {@link set} to be made.
+ */
+void lock();
+
+/**
+ * Signals the motor management thread that the user is no longer trying to set
+ * the motors.
+ */
+void unlock();
+
+/**
+ * Sets a motor to a given power. It's recommended to use this function rather
+ * than motorSet.
+ * @param port Port to be powered.
+ * @param power Motor power.
+ */
+void set(Port port, int power);
 } // end namespace motor
 
 #endif // MOTOR_HPP
