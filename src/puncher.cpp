@@ -6,6 +6,7 @@ using namespace motor;
 void puncher::set(int power)
 {
     lock();
-    set(PUNCHER, power);
+    set(PUNCHER_1, power);
+    set(PUNCHER_2, -power);
     unlock();
 }

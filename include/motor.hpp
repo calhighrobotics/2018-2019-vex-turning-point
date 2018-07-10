@@ -13,12 +13,14 @@ enum Port: unsigned char
     DRIVE_LF = 2,
     /** Left back drive. */
     DRIVE_LB = 3,
+    /** Slip gear puncher. */
+    PUNCHER_1 = 4,
+    /** Slip gear puncher. */
+    PUNCHER_2 = 5,
     /** Right front drive. */
     DRIVE_RF = 8,
     /** Right back drive. */
     DRIVE_RB = 9,
-    /** Slip gear puncher. */
-    PUNCHER = 10,
     /** Maximum amount of motor ports. */
     MAX_MOTOR_PORTS = 10
 };
