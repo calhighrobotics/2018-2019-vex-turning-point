@@ -25,24 +25,11 @@ void operatorControl()
         drive::left(deadzone(joystickGetAnalog(1, 3)));
         drive::right(deadzone(joystickGetAnalog(1, 2)));
 
-		// puncher: 5u/d
-		bool puncherForward = joystickGetDigital(1, 5, JOY_UP);
-		bool puncherBackward = joystickGetDigital(1, 5, JOY_DOWN);
-		if (puncherForward && !puncherBackward)
-		{
-			puncher::set(127);
-		}
-		else if (!puncherForward && puncherBackward)
-		{
-			puncher::set(-127);
-		}
-		else
-		{
-			puncher::set(0);
-		}
-
-		// wait for the motors to update before receiving input again
-		delay(MOTOR_DELAY);
+        // puncher: 7u
+        if (joystickGetDigital(1, 7, JOY_UP))
+        {
+            puncher::launch();
+        }
 
         // ball intake: 6u/d
         bool intakeForward = joystickGetDigital(1, 6, JOY_UP);

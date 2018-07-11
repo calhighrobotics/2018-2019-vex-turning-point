@@ -10,6 +10,12 @@ namespace puncher
  * @param power Motor power.
  */
 void set(int power);
-}
+
+/**
+ * Launches a ball from a puncher. This function starts a new task so repeated
+ * calls won't do anything.
+ */
+void launch();
+} // end namespace puncher
 
 #endif // PUNCHER_HPP
