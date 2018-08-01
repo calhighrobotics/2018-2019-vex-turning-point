@@ -47,6 +47,22 @@ void operatorControl()
             ballIntake::set(0);
         }
 
+        // puncher debug: 8u/d
+        bool puncherForward = joystickGetDigital(1, 8, JOY_UP);
+        bool puncherBackward = joystickGetDigital(1, 8, JOY_DOWN);
+        if (puncherForward && !puncherBackward)
+        {
+            puncher::set(127);
+        }
+        else if (!puncherForward && puncherBackward)
+        {
+            puncher::set(-127);
+        }
+        else
+        {
+            puncher::set(0);
+        }
+
         // wait for the motors to update before receiving input again
         taskDelayUntil(&wakeTime, MOTOR_DELAY);
     }
