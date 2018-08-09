@@ -7,8 +7,8 @@ using namespace motor;
 using namespace sensor;
 
 /** Right drive train encoder. */
-static Encoder rightEncoder;
-static Gyro gyro;
+static Encoder rightEncoder = nullptr;
+static Gyro gyro = nullptr;
 
 void drive::initEncoders()
 {
