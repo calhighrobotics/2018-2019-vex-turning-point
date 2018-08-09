@@ -6,7 +6,6 @@ namespace lift
 {
 /**
  * Sets the lift motors.
- *
  * @param power Motor power.
  */
 void set(int power);

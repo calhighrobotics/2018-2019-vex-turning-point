@@ -9,7 +9,6 @@ void initLimit();
 
 /**
  * Sets the puncher motor.
- *
  * @param power Motor power.
  */
 void set(int power);
