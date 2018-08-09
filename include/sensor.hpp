@@ -7,6 +7,8 @@ namespace sensor
 /** All allocated analog sensor ports. */
 enum AnalogPort: unsigned char
 {
+    /** Gyroscope. */
+    GYRO = 1
 };
 
 /** All allocated digital sensor ports. */

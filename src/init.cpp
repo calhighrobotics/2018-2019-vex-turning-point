@@ -9,4 +9,5 @@ void initializeIO()
 void initialize()
 {
     drive::initEncoders();
+    drive::initGyro();
 }
