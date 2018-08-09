@@ -1,6 +1,7 @@
 #include "main.hpp"
 #include "ballIntake.hpp"
 #include "drive.hpp"
+#include "lift.hpp"
 #include "puncher.hpp"
 
 /** Minimum joystick analog value. Used by {@link deadzone}. */
@@ -61,6 +62,22 @@ void operatorControl()
         else
         {
             puncher::set(0);
+        }
+
+        // lift: 5u/d
+        bool liftUp = joystickGetDigital(1, 5, JOY_UP);
+        bool liftDown = joystickGetDigital(1, 5, JOY_DOWN);
+        if (liftUp && !liftDown)
+        {
+            lift::set(127);
+        }
+        else if (!liftUp && liftDown)
+        {
+            lift::set(-127);
+        }
+        else
+        {
+            lift::set(0);
         }
 
         // wait for the motors to update before receiving input again

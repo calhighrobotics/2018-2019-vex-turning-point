@@ -17,6 +17,10 @@ enum Port: unsigned char
     PUNCHER_1 = 4,
     /** Slip gear puncher. */
     PUNCHER_2 = 5,
+    /** Left lift motor. */
+    LIFT_LEFT = 6,
+    /** Right lift motor. */
+    LIFT_RIGHT = 7,
     /** Right front drive. */
     DRIVE_RF = 8,
     /** Right back drive. */
