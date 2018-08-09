@@ -14,7 +14,7 @@ enum Port: unsigned char
     /** Left back drive. */
     DRIVE_LB = 3,
     /** Ball intake. */
-    BALL_INTAKE = 6,
+    BALL_INTAKE = 5,
     /** Slip gear puncher. */
     PUNCHER = 7,
     /** Right front drive. */
