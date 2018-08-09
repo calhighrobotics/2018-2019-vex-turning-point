@@ -3,16 +3,23 @@
 #include "motor.hpp"
 #include "sensor.hpp"
 
+using namespace motor;
+using namespace sensor;
+
 /** Power to set the puncher at. */
-static constexpr int POWER = 100;
+static constexpr int POWER = 127;
 /** Task for going through the process of launching. */
 static void launchTask(void*);
 /** Current task handle while launching. */
 static TaskHandle handle = nullptr;
 
+void puncher::initLimit()
+{
+    pinMode(PUNCHER_LIMIT, INPUT);
+}
+
 void puncher::set(int power)
 {
-    using namespace motor;
     lock();
     set(PUNCHER, -power);
     unlock();
@@ -34,12 +41,12 @@ void launchTask(void*)
     // start puncher
     puncher::set(POWER);
     // the limit switch may already be pressed so wait for it to pass that
-    while (digitalRead(sensor::PUNCHER_LIMIT) == HIGH)
+    while (digitalRead(PUNCHER_LIMIT) == HIGH)
     {
         taskDelay(MOTOR_DELAY);
     }
     // wait until the slip gear completes a revolution
-    while (digitalRead(sensor::PUNCHER_LIMIT) == LOW)
+    while (digitalRead(PUNCHER_LIMIT) == LOW)
     {
         taskDelay(MOTOR_DELAY);
     }

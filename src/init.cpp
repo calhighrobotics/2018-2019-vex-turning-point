@@ -1,11 +1,12 @@
-#include "motor.hpp"
-#include "sensor.hpp"
+#include "drive.hpp"
+#include "puncher.hpp"
 
 void initializeIO()
 {
-    sensor::init();
+    puncher::initLimit();
 }
 
 void initialize()
 {
+    drive::initEncoders();
 }

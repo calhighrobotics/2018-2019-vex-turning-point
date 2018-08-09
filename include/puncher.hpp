@@ -4,6 +4,9 @@
 /** Puncher-related functions. */
 namespace puncher
 {
+/** Initializes the limit switch. Should be called in `initializeIO()`. */
+void initLimit();
+
 /**
  * Sets the puncher motor.
  *
