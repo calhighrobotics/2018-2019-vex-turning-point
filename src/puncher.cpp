@@ -14,8 +14,7 @@ void puncher::set(int power)
 {
     using namespace motor;
     lock();
-    set(PUNCHER_1, power);
-    set(PUNCHER_2, -power);
+    set(PUNCHER, -power);
     unlock();
 }
 

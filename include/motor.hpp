@@ -7,24 +7,22 @@ namespace motor
 /** All allocated motor ports. */
 enum Port: unsigned char
 {
-    /** Ball intake. */
-    BALL_INTAKE = 1,
+    /** Left lift motor. */
+    LIFT_LEFT = 1,
     /** Left front drive. */
     DRIVE_LF = 2,
     /** Left back drive. */
     DRIVE_LB = 3,
+    /** Ball intake. */
+    BALL_INTAKE = 6,
     /** Slip gear puncher. */
-    PUNCHER_1 = 4,
-    /** Slip gear puncher. */
-    PUNCHER_2 = 5,
-    /** Left lift motor. */
-    LIFT_LEFT = 6,
-    /** Right lift motor. */
-    LIFT_RIGHT = 7,
+    PUNCHER = 7,
     /** Right front drive. */
     DRIVE_RF = 8,
     /** Right back drive. */
     DRIVE_RB = 9,
+    /** Right lift motor. */
+    LIFT_RIGHT = 10,
     /** Maximum amount of motor ports. */
     MAX_MOTOR_PORTS = 10
 };
