@@ -18,6 +18,14 @@ enum DigitalPort: unsigned char
     DT_RIGHT_TOP = 1,
     /** Bottom wire of the left drive train encoder. */
     DT_RIGHT_BOTTOM = 2,
+    /** Top wire of the right lift encoder. */
+    LIFT_RIGHT_TOP = 3,
+    /** Bottom wire of the right lift encoder. */
+    LIFT_RIGHT_BOTTOM = 4,
+    /** Top wire of the right lift encoder. */
+    LIFT_LEFT_TOP = 5,
+    /** Bottom wire of the left lift encoder. */
+    LIFT_LEFT_BOTTOM = 6,
     /** Limit switch to detect puncher rotations. */
     PUNCHER_LIMIT = 7
 };

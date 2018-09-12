@@ -1,4 +1,5 @@
 #include "drive.hpp"
+#include "lift.hpp"
 #include "puncher.hpp"
 
 void initializeIO()
@@ -10,4 +11,5 @@ void initialize()
 {
     drive::initEncoders();
     drive::initGyro();
+    lift::initEncoders();
 }
