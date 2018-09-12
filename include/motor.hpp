@@ -8,7 +8,7 @@ namespace motor
 enum Port: unsigned char
 {
     /** Left lift motor. */
-    LIFT_LEFT = 1,
+    LIFT_RIGHT = 1,
     /** Left front drive. */
     DRIVE_LF = 2,
     /** Left back drive. */
@@ -22,7 +22,7 @@ enum Port: unsigned char
     /** Right back drive. */
     DRIVE_RB = 9,
     /** Right lift motor. */
-    LIFT_RIGHT = 10,
+    LIFT_LEFT = 10,
     /** Maximum amount of motor ports. */
     MAX_MOTOR_PORTS = 10
 };
