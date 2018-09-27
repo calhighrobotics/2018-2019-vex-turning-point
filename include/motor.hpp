@@ -9,18 +9,18 @@ enum Port: unsigned char
 {
     /** Left lift motor. */
     LIFT_RIGHT = 1,
-    /** Left front drive. */
-    DRIVE_LF = 2,
-    /** Left back drive. */
-    DRIVE_LB = 3,
+    /** Right front drive. */
+    DRIVE_RF = 2,
+    /** Right back drive. */
+    DRIVE_RB = 3,
     /** Ball intake. */
     BALL_INTAKE = 5,
     /** Slip gear puncher. */
     PUNCHER = 7,
-    /** Right front drive. */
-    DRIVE_RF = 8,
-    /** Right back drive. */
-    DRIVE_RB = 9,
+    /** Left front drive. */
+    DRIVE_LF = 8,
+    /** Left back drive. */
+    DRIVE_LB = 9,
     /** Right lift motor. */
     LIFT_LEFT = 10,
     /** Maximum amount of motor ports. */
