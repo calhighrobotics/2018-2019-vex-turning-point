@@ -13,8 +13,12 @@ enum Port: unsigned char
     DRIVE_RF = 2,
     /** Right back drive. */
     DRIVE_RB = 3,
+    /** Cap intake wrist. */
+    WRIST = 4,
     /** Ball intake. */
     BALL_INTAKE = 5,
+    /** Cap claw. */
+    CLAW = 6,
     /** Slip gear puncher. */
     PUNCHER = 7,
     /** Left front drive. */
