@@ -34,7 +34,7 @@ void driveForward(int power, unsigned long ms)
 
 void launchBall()
 {
-    puncher::set(-127);
-    delay(1000);
+    puncher::set(127);
+    delay(3600);
     puncher::set(0);
 }
