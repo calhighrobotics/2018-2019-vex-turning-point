@@ -3,3 +3,6 @@ bin/
 
 # vim session files
 *.vim
+
+# vscode stuff
+.vscode/
