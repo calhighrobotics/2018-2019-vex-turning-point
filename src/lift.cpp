@@ -70,7 +70,7 @@ void lift::setLiftPosition(float position)
 void lift::set(int power)
 {
     lock();
-    set(LIFT_LEFT, -power);
-    set(LIFT_RIGHT, power);
+    set(LIFT_LEFT, power);
+    set(LIFT_RIGHT, -power);
     unlock();
 }
