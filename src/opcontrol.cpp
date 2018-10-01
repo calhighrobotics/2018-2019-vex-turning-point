@@ -42,8 +42,8 @@ void operatorControl()
         }
 
         // wrist: 7r/l
-        bool wristClockwise = joystickGetDigital(1, 6, JOY_RIGHT);
-        bool wristCounterClockwise = joystickGetDigital(1, 6, JOY_LEFT);
+        bool wristClockwise = joystickGetDigital(1, 7, JOY_RIGHT);
+        bool wristCounterClockwise = joystickGetDigital(1, 7, JOY_LEFT);
         capIntake::rotate(buttonControl(wristClockwise, wristCounterClockwise));
 
         // ball intake: 6u/d
@@ -62,8 +62,8 @@ void operatorControl()
         lift::set(127 * buttonControl(liftUp, liftDown));
 
         // claw: 8r/l
-        bool clawOpen = joystickGetDigital(1, 6, JOY_RIGHT);
-        bool clawClose = joystickGetDigital(1, 6, JOY_LEFT);
+        bool clawOpen = joystickGetDigital(1, 8, JOY_RIGHT);
+        bool clawClose = joystickGetDigital(1, 8, JOY_LEFT);
         capIntake::grab(buttonControl(clawOpen, clawClose));
 
         // wait for the motors to update before receiving input again
