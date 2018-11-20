@@ -1,14 +1,12 @@
 #ifndef MAIN_HPP
 #define MAIN_HPP
 
-#include <API.h>
-
 /** The amount of time (ms) it takes to update the motors after setting them. */
 constexpr unsigned long MOTOR_DELAY = 20;
 
 /**
- * Starts the motor management task. Required for {@link set} to work. Called
- * after `initialize()`, like during the start of `autonomous()` or
+ * Starts the motor management task. Required for {@link motor::set} to work.
+ * Called after `initialize()`, like during the start of `autonomous()` or
  * `operatorControl()`.
  */
 void initMotors();

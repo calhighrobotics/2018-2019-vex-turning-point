@@ -2,6 +2,7 @@
 #include "main.hpp"
 #include "motor.hpp"
 #include "sensor.hpp"
+#include <API.h>
 
 using namespace motor;
 using namespace sensor;

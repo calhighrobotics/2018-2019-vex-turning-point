@@ -1,7 +1,7 @@
 #include "lift.hpp"
-#include "main.hpp"
 #include "motor.hpp"
 #include "sensor.hpp"
+#include <API.h>
 #include <cmath>
 
 using namespace motor;

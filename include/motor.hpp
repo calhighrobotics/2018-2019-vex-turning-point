@@ -25,8 +25,6 @@ enum Port: unsigned char
     DRIVE_LF = 8,
     /** Left back drive. */
     DRIVE_LB = 9,
-    /** Cap claw. */
-    CLAW = 10,
     /** Maximum amount of motor ports. */
     MAX_MOTOR_PORTS = 10
 };
