@@ -59,7 +59,8 @@ static void eventLoopTick(void*)
 
 void lift::initEventLoop()
 {
-    eventLoopTask = taskCreate(eventLoopTick, TASK_DEFAULT_STACK_SIZE, nullptr, TASK_PRIORITY_DEFAULT);
+    eventLoopTask = taskCreate(eventLoopTick, TASK_DEFAULT_STACK_SIZE, nullptr,
+        TASK_PRIORITY_DEFAULT);
 }
 
 void lift::setLiftPosition(float position)

@@ -61,11 +61,6 @@ void operatorControl()
         bool liftDown = joystickGetDigital(1, 5, JOY_DOWN);
         lift::set(127 * buttonControl(liftUp, liftDown));
 
-        // claw: 8r/l
-        bool clawOpen = joystickGetDigital(1, 8, JOY_RIGHT);
-        bool clawClose = joystickGetDigital(1, 8, JOY_LEFT);
-        capIntake::grab(buttonControl(clawOpen, clawClose));
-
         // wait for the motors to update before receiving input again
         taskDelayUntil(&wakeTime, MOTOR_DELAY);
     }
