@@ -65,5 +65,5 @@ int joystick::ballIntake()
 {
     bool intakeForward = joystickGetDigital(1, 6, JOY_UP);
     bool intakeBackward = joystickGetDigital(1, 6, JOY_DOWN);
-    buttonControl(intakeForward, intakeBackward);
+    return buttonControl(intakeForward, intakeBackward);
 }
