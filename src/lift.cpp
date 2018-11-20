@@ -73,7 +73,12 @@ void lift::initEventLoop()
     eventLoopTask = taskRunLoop(eventLoopTick, MOTOR_DELAY);
 }
 
-void lift::setLiftPosition(float position)
+float lift::getCurrentPos()
+{
+    return (float) liftPid.getCurrentPos() / ticksForExtension;
+}
+
+void lift::setTargetPos(float position)
 {
     liftPid.setTargetPos(ticksForExtension *
             std::max(0.f, std::min(position, 1.f)));

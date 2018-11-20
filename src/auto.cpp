@@ -1,6 +1,7 @@
 #include "drive.hpp"
 #include "main.hpp"
 #include "puncher.hpp"
+#include "API.h"
 
 /**
  * Drives the robot forward.

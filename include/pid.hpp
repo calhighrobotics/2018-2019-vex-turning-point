@@ -4,6 +4,11 @@
 #include <API.h>
 #include <vector>
 
+/** Gets the current position. */
+using MotorGetter = int(*)();
+/** Sets the motor power. */
+using MotorSetter = void(*)(int);
+
 /** Tracks the position and velocity of a side of the lift. */
 class Velocity
 {
@@ -12,7 +17,7 @@ public:
      * Creates a Velocity tracker object.
      * @param get Position getter.
      */
-    Velocity(PID::Getter get);
+    Velocity(MotorGetter get);
 
     /**
      * Updates position and velocity tracking data.
@@ -34,24 +39,19 @@ private:
     void addVel(int vel);
 
     /** Tracks the last `maxVelocities` to calculate the rolling average. */
-    float velocities[maxVelocities];
+    float velocities[maxVelocities] = {0};
     /** Position of the oldest velocity value in the queue. */
     int oldest;
     /** Value of the last position. Used in differentiation. */
     int lastValue;
     /** Gets the current position. */
-    PID::Getter get;
+    MotorGetter get;
 };
 
 /** PID position controller. */
 class PID
 {
 public:
-    /** Gets the current position. */
-    using Getter = int(*)();
-    /** Sets the motor power. */
-    using Setter = void(*)(int);
-
     /** Initializes the event loop task. */
     static void initAll();
 
@@ -63,10 +63,16 @@ public:
      * @param get Position getter.
      * @param set Motor group setter.
      */
-    PID(float p, float i, float d, Getter get, Setter set);
+    PID(float p, float i, float d, MotorGetter get, MotorSetter set);
     ~PID();
 
-    /** Sets the target position of the PID. Protected by a mutex. */
+    /** Gets the current position of the PID in encoder ticks. */
+    int getCurrentPos() const;
+
+    /**
+     * Sets the target position of the PID in encoder ticks. Protected by a
+     * mutex.
+     */
     void setTargetPos(int pos);
 
 private:
@@ -92,9 +98,9 @@ private:
     /** Derivative term. */
     const float d;
     /** Position getter. */
-    const Getter get;
+    const MotorGetter get;
     /** Motor group setter. */
-    const Setter set;
+    const MotorSetter set;
     /** Velocity tracker. Used in derivative term. */
     Velocity velocity;
     /** Mutex for setting targetPos. */

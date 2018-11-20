@@ -2,8 +2,7 @@
 #include "main.hpp"
 #include <cmath>
 
-Velocity::Velocity(PID::Getter get)
-    : velocities{ {0} }, oldest{ 0 }, lastValue{ 0 }, get{ get } {}
+Velocity::Velocity(MotorGetter get): oldest{ 0 }, lastValue{ 0 }, get{ get } {}
 
 void Velocity::update(int deltaTime)
 {
@@ -51,7 +50,7 @@ void PID::eventLoop()
     }
 }
 
-PID::PID(float p, float i, float d, Getter get, Setter set)
+PID::PID(float p, float i, float d, MotorGetter get, MotorSetter set)
     : uid{ pids.size() }, p{ p }, i{ i }, d{ d }, get{ get }, set{ set },
     velocity{ get }, targetMutex{ mutexCreate() }, targetPos{ 0 }
 {
@@ -61,6 +60,11 @@ PID::PID(float p, float i, float d, Getter get, Setter set)
 PID::~PID()
 {
     pids[uid] = nullptr;
+}
+
+int PID::getCurrentPos() const
+{
+    return get();
 }
 
 void PID::setTargetPos(int pos)

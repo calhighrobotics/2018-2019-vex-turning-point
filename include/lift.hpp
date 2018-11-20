@@ -11,10 +11,16 @@ void initEncoders();
 void initEventLoop();
 
 /**
- * Sets lift position.
+ * Gets the current lift position.
+ * @returns A value from 0 to 1 specifying current extension of the lift.
+ */
+float getCurrentPos();
+
+/**
+ * Sets target lift position.
  * @param position A value from 0 to 1 specifying extension of the lift.
  */
-void setLiftPosition(float position);
+void setTargetPos(float position);
 
 /**
  * Sets the lift motors.
