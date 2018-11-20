@@ -1,77 +1,88 @@
 #include "lift.hpp"
+#include "main.hpp"
 #include "motor.hpp"
+#include "pid.hpp"
 #include "sensor.hpp"
 #include <API.h>
+#include <algorithm>
 #include <cmath>
 
 using namespace motor;
 using namespace sensor;
 
-/** Left lift encoder. */
-static Encoder leftEncoder = nullptr;
-
-/** Right lift encoder. */
-static Encoder rightEncoder = nullptr;
-
-/** The event loop object. */
+/** The event loop task handle. */
 static TaskHandle eventLoopTask = nullptr;
 
-/** The desired position of the lift. */
-static float targetPosition = 0;
+/** How many encoder ticks between retracted and fully extended. */
+static constexpr int ticksForExtension = 80;
 
-/** How many encoder values between retracted and fully extended. */
-static constexpr int ticksForExtension = 360;
+/** Left encoder. */
+static Encoder leftEnc = nullptr;
+/** Right encoder. */
+static Encoder rightEnc = nullptr;
 
-/** Length of a tick of encoder */
-static constexpr int tickTime = 15;
+static int getLeftPos()
+{
+    return encoderGet(leftEnc);
+}
+
+static int getRightPos()
+{
+    return encoderGet(rightEnc);
+}
+
+static int getLiftPos()
+{
+    return (getLeftPos() + getRightPos()) / 2;
+}
+
+static PID liftPid{ 1, 0, 0, getLiftPos, lift::set };
+static Velocity leftVel{ getLeftPos };
+static Velocity rightVel{ getRightPos };
 
 void lift::initEncoders()
 {
-    leftEncoder = encoderInit(LIFT_LEFT_TOP, LIFT_LEFT_BOTTOM,
-        /*reverse=*/ true);
-    rightEncoder = encoderInit(LIFT_RIGHT_TOP, LIFT_RIGHT_BOTTOM,
+    leftEnc = encoderInit(LIFT_LEFT_TOP, LIFT_LEFT_BOTTOM, /*reverse=*/ true);
+    rightEnc = encoderInit(LIFT_RIGHT_TOP, LIFT_RIGHT_BOTTOM,
         /*reverse=*/ false);
 }
 
-static void eventLoopTick(void*)
+/** Learning rate of the power amplifier variables. */
+static constexpr float velLearningRate = 0.1;
+
+/** Left power amplifier. */
+static float kLeft = 1;
+/** Right power amplifier. */
+static float kRight = 1;
+
+static void eventLoopTick()
 {
-    unsigned long lastTaskRunTime = millis();
+    // update position/velocity tracker
+    leftVel.update(MOTOR_DELAY);
+    rightVel.update(MOTOR_DELAY);
 
-    while (true)
-    {
-        // Do happy things
-        float targetLiftPosition = targetPosition;
-        int targetEncoderValue = ticksForExtension * targetLiftPosition;
-
-        // TODO: handle syncing of multiple encoders
-        int currentEncoderValue = encoderGet(rightEncoder);
-
-        // Determine which way we should go
-        int encoderDelta = targetEncoderValue - currentEncoderValue;
-
-        // Returns power (clamped to [-127, 127]) given encoder delta.
-        int power = round(127 * tanh((1.0f / ticksForExtension) * encoderDelta));
-        lift::set(power);
-
-        taskDelayUntil(&lastTaskRunTime, tickTime);
-    }
+    // learn how much faster one motor is than the other
+    const float velError = velLearningRate *
+        (leftVel.getVel() - rightVel.getVel());
+    kLeft -= velError;
+    kRight += velError;
 }
 
 void lift::initEventLoop()
 {
-    eventLoopTask = taskCreate(eventLoopTick, TASK_DEFAULT_STACK_SIZE, nullptr,
-        TASK_PRIORITY_DEFAULT);
+    eventLoopTask = taskRunLoop(eventLoopTick, MOTOR_DELAY);
 }
 
 void lift::setLiftPosition(float position)
 {
-    targetPosition = position;
+    liftPid.setTargetPos(ticksForExtension *
+            std::max(0.f, std::min(position, 1.f)));
 }
 
 void lift::set(int power)
 {
     lock();
-    set(LIFT_LEFT, power);
-    set(LIFT_RIGHT, -power);
+    set(LIFT_LEFT, kLeft * power);
+    set(LIFT_RIGHT, kRight * -power);
     unlock();
 }
