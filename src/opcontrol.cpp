@@ -3,6 +3,7 @@
 #include "capIntake.hpp"
 #include "drive.hpp"
 #include "joystick.hpp"
+#include "lcd.hpp"
 #include "lift.hpp"
 #include "puncher.hpp"
 #include <API.h>
@@ -10,6 +11,7 @@
 void operatorControl()
 {
     initMotors();
+    lcd::init();
 
     unsigned long wakeTime = millis();
     while (true)
