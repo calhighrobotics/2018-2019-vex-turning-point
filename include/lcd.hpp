@@ -4,7 +4,7 @@
 /** LCD-related functions. */
 namespace lcd
 {
-/** Initializes the LCD controller. Called during `initialize()`. */
+/** Initializes the LCD controller. Called after `initialize()`. */
 void init();
 }
 
