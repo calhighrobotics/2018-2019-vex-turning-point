@@ -1,3 +1,4 @@
+#include "auto.hpp"
 #include "lcd.hpp"
 #include <API.h>
 
@@ -61,28 +62,34 @@ void lcd::init()
     taskRunLoop(lcdEventLoop, lcdDelay);
 }
 
-/** LCD loop state. */
-enum LCDState
-{
-    MAIN, BATTERY, NUM_STATES
-};
-
-/** State loop var. */
-static LCDState state = MAIN;
+/** Selects the auton program. */
+static void autonSelect();
 
 void lcdEventLoop()
 {
+    enum LCDState
+    {
+        MAIN, BATTERY, AUTON_SELECT, NUM_STATES
+    };
+    static LCDState state = AUTON_SELECT;
+
     buttons.poll();
     lcdClear(port);
 
     switch (state)
     {
         case MAIN:
+            // display greeting message
             lcdSetText(port, 1, "B for better!");
             break;
         case BATTERY:
+            // battery readout
             lcdPrint(port, 1, "Primary: %.1fV", powerLevelMain() / 1000.f);
             lcdPrint(port, 2, "Backup:  %.1fV", powerLevelBackup() / 1000.f);
+            break;
+        case AUTON_SELECT:
+            // autonomous program selection
+            autonSelect();
             break;
         default:
             lcdPrint(port, 1, "Unknown state %d", static_cast<int>(state));
@@ -91,5 +98,24 @@ void lcdEventLoop()
     if (buttons.justPressed(LCD_BTN_CENTER))
     {
         state = static_cast<LCDState>((state + 1) % NUM_STATES);
+    }
+}
+
+void autonSelect()
+{
+    using namespace auton;
+
+    // display each line of the auton names
+    lcdPrint(port, 1, autonNames[getAuton()][0]);
+    lcdPrint(port, 2, autonNames[getAuton()][1]);
+
+    // use left/right buttons to cycle between auton programs
+    if (buttons.justPressed(LCD_BTN_LEFT))
+    {
+        setAuton(static_cast<Auton>((getAuton() - 1) % NUM_AUTONS));
+    }
+    if (buttons.justPressed(LCD_BTN_RIGHT))
+    {
+        setAuton(static_cast<Auton>((getAuton() + 1) % NUM_AUTONS));
     }
 }
