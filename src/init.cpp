@@ -2,8 +2,9 @@
 #include "lift.hpp"
 #include "puncher.hpp"
 
-// not having this causes an undefined reference error for now
+// not having these will cause an undefined reference error
 void* __dso_handle;
+extern "C" void _fini(){}
 
 void initializeIO()
 {
