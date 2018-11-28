@@ -8,11 +8,6 @@ void Velocity::update(int value, int deltaTime)
     lastValue = value;
 }
 
-int Velocity::getPos() const
-{
-    return lastValue;
-}
-
 float Velocity::getVel() const
 {
     // calculate rolling average
@@ -31,33 +26,26 @@ void Velocity::addVel(int vel)
     if (oldest >= maxVelocities) oldest = 0;
 }
 
-PID::PID(float kP, float kI, float kD, MotorGetter get, MotorSetter set)
-    : kP{ kP }, kI{ kI }, kD{ kD }, get{ get }, set{ set },
-    targetMutex{ nullptr }, targetPos{ 0 } {}
+PID::PID(float kP, float kI, float kD)
+    : kP{ kP }, kI{ kI }, kD{ kD }, targetMutex{ nullptr }, targetPos{ 0 } {}
 
 void PID::init()
 {
     targetMutex = mutexCreate();
 }
 
-void PID::update(int deltaTime)
+int PID::update(int value, int deltaTime)
 {
-    velocity.update(get(), deltaTime);
+    velocity.update(value, deltaTime);
 
     // determine which way we should go and by how much
-    const int currentPos = velocity.getPos();
     mutexTake(targetMutex, 0);
-    const int posError = targetPos - currentPos;
+    const int target = targetPos;
     mutexGive(targetMutex);
+    const float p = kP * (target - value);
 
-    // calculate power (clamped to the interval [-127, 127]) given encoder delta
-    const int power = round(127 * tanh(kP * posError));
-    set(power);
-}
-
-int PID::getCurrentPos() const
-{
-    return get();
+    // power clamped to the interval [-127, 127]
+    return round(127 * tanh(p));
 }
 
 void PID::setTargetPos(int pos)

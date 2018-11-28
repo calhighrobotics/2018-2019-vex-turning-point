@@ -11,5 +11,5 @@ void initialize()
 {
     drive::initEncoders();
     drive::initGyro();
-    lift::initEncoders();
+    lift::init();
 }

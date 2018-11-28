@@ -11,8 +11,6 @@ static constexpr int SLEW_RATE = 20;
 static int requested[MAX_MOTOR_PORTS];
 /** Keeps track of motor mutexes. */
 static Mutex requestedMutexes[MAX_MOTOR_PORTS];
-/** Internal mutex to facilitate `motor::set` calls. */
-static Mutex mutex = nullptr;
 
 /** Slew rate management function. */
 static void slewRate()

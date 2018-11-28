@@ -3,11 +3,6 @@
 
 #include <API.h>
 
-/** Gets the current position. */
-using MotorGetter = int(*)();
-/** Sets the motor power. */
-using MotorSetter = void(*)(int);
-
 /** Tracks the position and velocity of a side of the lift. */
 class Velocity
 {
@@ -18,9 +13,6 @@ public:
      * @param deltaTime Time in milliseconds between last update.
      */
     void update(int value, int deltaTime);
-
-    /** Gets the last recorded position. */
-    int getPos() const;
 
     /** Gets the velocity in ticks per millisecond. */
     float getVel() const;
@@ -49,22 +41,19 @@ public:
      * @param kP Proportional term coefficient.
      * @param kI Integral term coefficient.
      * @param kD Derivative term coefficient.
-     * @param get Position getter.
-     * @param set Motor group setter.
      */
-    PID(float kP, float kI, float kD, MotorGetter get, MotorSetter set);
+    PID(float kP, float kI, float kD);
 
     /** Initializes the targetPos mutex. */
     void init();
 
     /**
      * Updates the PID.
+     * @param value Encoder value.
      * @param deltaTime Delta time in ms.
+     * @returns The power at which to set the motors.
      */
-    void update(int deltaTime);
-
-    /** Gets the current position of the PID in encoder ticks. */
-    int getCurrentPos() const;
+    int update(int value, int deltaTime);
 
     /**
      * Sets the target position of the PID in encoder ticks. Protected by a
@@ -79,10 +68,6 @@ private:
     const float kI;
     /** Derivative term coefficient. */
     const float kD;
-    /** Position getter. */
-    const MotorGetter get;
-    /** Motor group setter. */
-    const MotorSetter set;
     /** Velocity tracker. Used in derivative term. */
     Velocity velocity;
     /** Mutex for setting targetPos. */

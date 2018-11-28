@@ -9,43 +9,34 @@
 using namespace motor;
 using namespace sensor;
 
-/** How many encoder ticks between retracted and fully extended. */
+/** How many encoder ticks between fully retracted and extended. */
 static constexpr int ticksForExtension = 80;
-
-/** Left encoder. */
-static Encoder leftEnc = nullptr;
-/** Right encoder. */
-static Encoder rightEnc = nullptr;
-
-static int getLeftPos()
-{
-    return encoderGet(leftEnc);
-}
 
 static void setLeft(int power)
 {
     set(LIFT_LEFT, power);
 }
 
-static int getRightPos()
-{
-    return encoderGet(rightEnc);
-}
+static Encoder leftEnc = nullptr;
+static int leftPos = 0;
+static PID leftPid{ 1, 0, 0 };
 
 static void setRight(int power)
 {
     set(LIFT_RIGHT, -power);
 }
 
-/** Left side. */
-static PID leftPid{ 1, 0, 0, getLeftPos, setLeft };
-/** Right side. */
-static PID rightPid{ 1, 0, 0, getRightPos, setRight };
+static Encoder rightEnc = nullptr;
+static int rightPos = 0;
+static PID rightPid{ 1, 0, 0 };
 
-static void liftEventLoop()
+static void pidLoop()
 {
-    leftPid.update(MOTOR_DELAY);
-    rightPid.update(MOTOR_DELAY);
+    leftPos = encoderGet(leftEnc);
+    setLeft(leftPid.update(leftPos, MOTOR_DELAY));
+
+    rightPos = encoderGet(rightEnc);
+    setRight(rightPid.update(rightPos, MOTOR_DELAY));
 }
 
 void lift::init()
@@ -53,18 +44,19 @@ void lift::init()
     leftEnc = encoderInit(LIFT_LEFT_TOP, LIFT_LEFT_BOTTOM, /*reverse=*/ true);
     encoderReset(leftEnc);
     leftPid.init();
+
     rightEnc = encoderInit(LIFT_RIGHT_TOP, LIFT_RIGHT_BOTTOM,
         /*reverse=*/ false);
     encoderReset(rightEnc);
     rightPid.init();
 
-    taskRunLoop(liftEventLoop, MOTOR_DELAY);
+    taskRunLoop(pidLoop, MOTOR_DELAY);
 }
 
 float lift::getCurrentPos()
 {
     // average the two sides
-    return (leftPid.getCurrentPos() + rightPid.getCurrentPos()) / 2;
+    return (leftPos + rightPos) / 2;
 }
 
 void lift::setTargetPos(float position)
