@@ -11,8 +11,5 @@ void ballIntake::set(int direction)
 {
     // clamp direction between -1 and 1 just to be safe
     direction = std::max(-1, std::min(1, direction));
-
-    lock();
     set(BALL_INTAKE, direction * POWER);
-    unlock();
 }

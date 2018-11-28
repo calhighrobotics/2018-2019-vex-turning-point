@@ -8,7 +8,5 @@ static constexpr int wristPower = 127;
 
 void capIntake::rotate(int direction)
 {
-    lock();
     set(WRIST, wristPower * direction);
-    unlock();
 }

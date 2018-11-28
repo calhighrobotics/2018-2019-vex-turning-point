@@ -7,7 +7,7 @@ constexpr unsigned long MOTOR_DELAY = 20;
 /**
  * Starts the motor management task. Required for {@link motor::set} to work.
  * Called after `initialize()`, like during the start of `autonomous()` or
- * `operatorControl()`.
+ * `operatorControl()`. Implemented in `motor.cpp`.
  */
 void initMotors();
 

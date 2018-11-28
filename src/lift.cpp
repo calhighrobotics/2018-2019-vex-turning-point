@@ -5,7 +5,6 @@
 #include "sensor.hpp"
 #include <API.h>
 #include <algorithm>
-#include <cmath>
 
 using namespace motor;
 using namespace sensor;
@@ -25,9 +24,7 @@ static int getLeftPos()
 
 static void setLeft(int power)
 {
-    motor::lock();
-    motor::set(LIFT_LEFT, power);
-    motor::unlock();
+    set(LIFT_LEFT, power);
 }
 
 static int getRightPos()
@@ -37,9 +34,7 @@ static int getRightPos()
 
 static void setRight(int power)
 {
-    motor::lock();
-    motor::set(LIFT_RIGHT, -power);
-    motor::unlock();
+    set(LIFT_RIGHT, -power);
 }
 
 /** Left side. */
