@@ -57,13 +57,13 @@ public:
 
     /**
      * Creates a PID object.
-     * @param p Proportional term.
-     * @param i Integral term.
-     * @param d Derivative term.
+     * @param kP Proportional term coefficient.
+     * @param kI Integral term coefficient.
+     * @param kD Derivative term coefficient.
      * @param get Position getter.
      * @param set Motor group setter.
      */
-    PID(float p, float i, float d, MotorGetter get, MotorSetter set);
+    PID(float kP, float kI, float kD, MotorGetter get, MotorSetter set);
     ~PID();
 
     /** Gets the current position of the PID in encoder ticks. */
@@ -91,12 +91,12 @@ private:
 
     /** Unique id. Used in deregistering after destruction. */
     const size_t uid;
-    /** Proportional term. */
-    const float p;
-    /** Integral term. */
-    const float i;
-    /** Derivative term. */
-    const float d;
+    /** Proportional term coefficient. */
+    const float kP;
+    /** Integral term coefficient. */
+    const float kI;
+    /** Derivative term coefficient. */
+    const float kD;
     /** Position getter. */
     const MotorGetter get;
     /** Motor group setter. */

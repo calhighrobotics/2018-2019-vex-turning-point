@@ -50,8 +50,8 @@ void PID::eventLoop()
     }
 }
 
-PID::PID(float p, float i, float d, MotorGetter get, MotorSetter set)
-    : uid{ pids.size() }, p{ p }, i{ i }, d{ d }, get{ get }, set{ set },
+PID::PID(float kP, float kI, float kD, MotorGetter get, MotorSetter set)
+    : uid{ pids.size() }, kP{ kP }, kI{ kI }, kD{ kD }, get{ get }, set{ set },
     velocity{ get }, targetMutex{ mutexCreate() }, targetPos{ 0 }
 {
     pids.push_back(this);
@@ -85,6 +85,6 @@ void PID::update(int deltaTime)
     mutexGive(targetMutex);
 
     // calculate power (clamped to the interval [-127, 127]) given encoder delta
-    const int power = round(127 * tanh(p * posError));
+    const int power = round(127 * tanh(kP * posError));
     set(power);
 }
