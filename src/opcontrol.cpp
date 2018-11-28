@@ -23,9 +23,15 @@ void operatorControl()
         if (joystick::puncher()) puncher::launch();
         // TODO: move speed constants to component code
         puncher::set(127 * joystick::puncherDebug());
-        lift::set(127 * joystick::lift());
         capIntake::rotate(joystick::wrist());
         ballIntake::set(joystick::ballIntake());
+
+        //lift::set(127 * joystick::lift());
+        // after 1s of holding down the button, the lift should aim to be fully
+        //  raised
+        static constexpr float liftIncrement = MOTOR_DELAY / 1000;
+        lift::setTargetPos(lift::getCurrentPos() +
+            liftIncrement * joystick::lift());
 
         // wait for the motors to update before receiving input again
         taskDelayUntil(&wakeTime, MOTOR_DELAY);
