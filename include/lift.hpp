@@ -7,9 +7,6 @@ namespace lift
 /** Initializes the lift encoders. */
 void initEncoders();
 
-/** Initializes the event loop to adjust motors. */
-void initEventLoop();
-
 /**
  * Gets the current lift position.
  * @returns A value from 0 to 1 specifying current extension of the lift.

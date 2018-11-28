@@ -10,9 +10,6 @@
 using namespace motor;
 using namespace sensor;
 
-/** The event loop task handle. */
-static TaskHandle eventLoopTask = nullptr;
-
 /** How many encoder ticks between retracted and fully extended. */
 static constexpr int ticksForExtension = 80;
 
@@ -26,19 +23,27 @@ static int getLeftPos()
     return encoderGet(leftEnc);
 }
 
+static void setLeft(int power)
+{
+    motor::lock();
+    motor::set(LIFT_LEFT, power);
+    motor::unlock();
+}
+
 static int getRightPos()
 {
     return encoderGet(rightEnc);
 }
 
-static int getLiftPos()
+static void setRight(int power)
 {
-    return (getLeftPos() + getRightPos()) / 2;
+    motor::lock();
+    motor::set(LIFT_RIGHT, -power);
+    motor::unlock();
 }
 
-static PID liftPid{ 1, 0, 0, getLiftPos, lift::set };
-static Velocity leftVel{ getLeftPos };
-static Velocity rightVel{ getRightPos };
+static PID leftPid{ 1, 0, 0, getLeftPos, setLeft };
+static PID rightPid{ 1, 0, 0, getRightPos, setRight };
 
 void lift::initEncoders()
 {
@@ -47,47 +52,21 @@ void lift::initEncoders()
         /*reverse=*/ false);
 }
 
-/** Learning rate of the power amplifier variables. */
-static constexpr float velLearningRate = 0.1;
-
-/** Left power amplifier. */
-static float kLeft = 1;
-/** Right power amplifier. */
-static float kRight = 1;
-
-static void eventLoopTick()
-{
-    // update position/velocity tracker
-    leftVel.update(MOTOR_DELAY);
-    rightVel.update(MOTOR_DELAY);
-
-    // learn how much faster one motor is than the other
-    const float velError = velLearningRate *
-        (leftVel.getVel() - rightVel.getVel());
-    kLeft -= velError;
-    kRight += velError;
-}
-
-void lift::initEventLoop()
-{
-    eventLoopTask = taskRunLoop(eventLoopTick, MOTOR_DELAY);
-}
-
 float lift::getCurrentPos()
 {
-    return (float) liftPid.getCurrentPos() / ticksForExtension;
+    // average the two sides.
+    return (leftPid.getCurrentPos() + rightPid.getCurrentPos()) / 2;
 }
 
 void lift::setTargetPos(float position)
 {
-    liftPid.setTargetPos(ticksForExtension *
-            std::max(0.f, std::min(position, 1.f)));
+    position = ticksForExtension * std::max(0.f, std::min(position, 1.f));
+    leftPid.setTargetPos(position);
+    rightPid.setTargetPos(position);
 }
 
 void lift::set(int power)
 {
-    lock();
-    set(LIFT_LEFT, kLeft * power);
-    set(LIFT_RIGHT, kRight * -power);
-    unlock();
+    setLeft(power);
+    setRight(power);
 }
