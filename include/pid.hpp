@@ -2,7 +2,6 @@
 #define PID_HPP
 
 #include <API.h>
-#include <vector>
 
 /** Gets the current position. */
 using MotorGetter = int(*)();
@@ -14,18 +13,13 @@ class Velocity
 {
 public:
     /**
-     * Creates a Velocity tracker object.
-     * @param get Position getter.
-     */
-    Velocity(MotorGetter get);
-
-    /**
      * Updates position and velocity tracking data.
+     * @param value Encoder value.
      * @param deltaTime Time in milliseconds between last update.
      */
-    void update(int deltaTime);
+    void update(int value, int deltaTime);
 
-    /** Gets the last-recorded position. */
+    /** Gets the last recorded position. */
     int getPos() const;
 
     /** Gets the velocity in ticks per millisecond. */
@@ -41,20 +35,15 @@ private:
     /** Tracks the last `maxVelocities` to calculate the rolling average. */
     float velocities[maxVelocities] = {0};
     /** Position of the oldest velocity value in the queue. */
-    int oldest;
+    int oldest = 0;
     /** Value of the last position. Used in differentiation. */
-    int lastValue;
-    /** Gets the current position. */
-    MotorGetter get;
+    int lastValue = 0;
 };
 
 /** PID position controller. */
 class PID
 {
 public:
-    /** Initializes the event loop task. */
-    static void initAll();
-
     /**
      * Creates a PID object.
      * @param kP Proportional term coefficient.
@@ -64,7 +53,15 @@ public:
      * @param set Motor group setter.
      */
     PID(float kP, float kI, float kD, MotorGetter get, MotorSetter set);
-    ~PID();
+
+    /** Initializes the targetPos mutex. */
+    void init();
+
+    /**
+     * Updates the PID.
+     * @param deltaTime Delta time in ms.
+     */
+    void update(int deltaTime);
 
     /** Gets the current position of the PID in encoder ticks. */
     int getCurrentPos() const;
@@ -76,21 +73,6 @@ public:
     void setTargetPos(int pos);
 
 private:
-    /** Manages the event loop task. */
-    static TaskHandle pidTask;
-    /** All registered PID objects. */
-    static std::vector<PID*> pids;
-    /** Event loop task. */
-    static void eventLoop();
-
-    /**
-     * Updates the PID.
-     * @param deltaTime Delta time in ms.
-     */
-    void update(int deltaTime);
-
-    /** Unique id. Used in deregistering after destruction. */
-    const size_t uid;
     /** Proportional term coefficient. */
     const float kP;
     /** Integral term coefficient. */

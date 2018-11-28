@@ -42,24 +42,39 @@ static void setRight(int power)
     motor::unlock();
 }
 
+/** Left side. */
 static PID leftPid{ 1, 0, 0, getLeftPos, setLeft };
+/** Right side. */
 static PID rightPid{ 1, 0, 0, getRightPos, setRight };
 
-void lift::initEncoders()
+static void liftEventLoop()
+{
+    leftPid.update(MOTOR_DELAY);
+    rightPid.update(MOTOR_DELAY);
+}
+
+void lift::init()
 {
     leftEnc = encoderInit(LIFT_LEFT_TOP, LIFT_LEFT_BOTTOM, /*reverse=*/ true);
+    encoderReset(leftEnc);
+    leftPid.init();
     rightEnc = encoderInit(LIFT_RIGHT_TOP, LIFT_RIGHT_BOTTOM,
         /*reverse=*/ false);
+    encoderReset(rightEnc);
+    rightPid.init();
+
+    taskRunLoop(liftEventLoop, MOTOR_DELAY);
 }
 
 float lift::getCurrentPos()
 {
-    // average the two sides.
+    // average the two sides
     return (leftPid.getCurrentPos() + rightPid.getCurrentPos()) / 2;
 }
 
 void lift::setTargetPos(float position)
 {
+    // convert position to encoder ticks
     position = ticksForExtension * std::max(0.f, std::min(position, 1.f));
     leftPid.setTargetPos(position);
     rightPid.setTargetPos(position);
