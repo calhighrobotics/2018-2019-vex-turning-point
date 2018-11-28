@@ -5,6 +5,7 @@
 #include "joystick.hpp"
 #include "lcd.hpp"
 #include "lift.hpp"
+#include "pid.hpp"
 #include "puncher.hpp"
 #include <API.h>
 
@@ -12,6 +13,7 @@ void operatorControl()
 {
     initMotors();
     lcd::init();
+    //PID::initAll();
 
     unsigned long wakeTime = millis();
     while (true)
