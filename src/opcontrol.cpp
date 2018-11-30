@@ -29,12 +29,10 @@ void operatorControl()
         ballIntake::set(joystick::ballIntake());
 
         //lift::set(127 * joystick::lift());
-        // after 1s of holding down the button, the lift should aim to be fully
-        //  raised
-        static constexpr float liftIncrement = MOTOR_DELAY / 100.f;
-        printf("lift: %.6f", lift::getCurrentPos() + liftIncrement * joystick::lift());
+        static constexpr float liftIncrement = 0.5;
+        int l = joystick::lift();
         lift::setTargetPos(lift::getCurrentPos() +
-            liftIncrement * joystick::lift());
+            (l > 0 ? liftIncrement : l < 0 ? -liftIncrement : 0));
 
         // wait for the motors to update before receiving input again
         taskDelayUntil(&wakeTime, MOTOR_DELAY);

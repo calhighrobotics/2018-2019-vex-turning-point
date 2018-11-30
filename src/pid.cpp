@@ -47,7 +47,7 @@ int PID::update(int value, int deltaTime)
 
     // power clamped to the interval [-127, 127]
     int power = round(127 * tanh(p));
-    printf("value: %d, p: %.2f, power: %d\n", value, (double) p, power);
+    printf("value: %d, p: %.2f, power: %d\n", value, p, power);
     return power;
 }
 
