@@ -1,6 +1,7 @@
 #ifndef PID_HPP
 #define PID_HPP
 
+#include "mutexVar.hpp"
 #include <API.h>
 
 /** Tracks the position and velocity of a side of the lift. */
@@ -44,7 +45,7 @@ public:
      */
     PID(float kP, float kI, float kD);
 
-    /** Initializes the targetPos mutex. */
+    /** Initializes the targetPos mutex var. */
     void init();
 
     /**
@@ -70,10 +71,8 @@ private:
     const float kD;
     /** Velocity tracker. Used in derivative term. */
     Velocity velocity;
-    /** Mutex for setting targetPos. */
-    Mutex targetMutex;
     /** Target position. */
-    int targetPos;
+    MutexVar<int> targetPos;
 };
 
 #endif // PID_HPP

@@ -28,11 +28,11 @@ void Velocity::addVel(int vel)
 }
 
 PID::PID(float kP, float kI, float kD)
-    : kP{ kP }, kI{ kI }, kD{ kD }, targetMutex{ nullptr }, targetPos{ 0 } {}
+    : kP{ kP }, kI{ kI }, kD{ kD }, targetPos{ 0 } {}
 
 void PID::init()
 {
-    targetMutex = mutexCreate();
+    targetPos.init();
 }
 
 int PID::update(int value, int deltaTime)
@@ -40,12 +40,10 @@ int PID::update(int value, int deltaTime)
     velocity.update(value, deltaTime);
 
     // determine which way we should go and by how much
-    mutexTake(targetMutex, 0);
-    const int target = targetPos;
-    mutexGive(targetMutex);
-    const float p = kP * (target - value);
+    const float p = kP * (targetPos - value);
 
     // power clamped to the interval [-127, 127]
+    // the tanh smooths the curve
     int power = round(127 * tanh(p));
     printf("value: %d, p: %.2f, power: %d\n", value, p, power);
     return power;
@@ -53,8 +51,5 @@ int PID::update(int value, int deltaTime)
 
 void PID::setTargetPos(int pos)
 {
-    if (!targetMutex) return;
-    mutexTake(targetMutex, 0);
     targetPos = pos;
-    mutexGive(targetMutex);
 }
