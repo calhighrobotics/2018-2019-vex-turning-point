@@ -53,6 +53,7 @@ int PID::update(int value, int deltaTime)
 
 void PID::setTargetPos(int pos)
 {
+    if (!targetMutex) return;
     mutexTake(targetMutex, 0);
     targetPos = pos;
     mutexGive(targetMutex);

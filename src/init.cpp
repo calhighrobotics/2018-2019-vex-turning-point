@@ -4,12 +4,11 @@
 
 void initializeIO()
 {
-    puncher::initLimit();
+    //puncher::initLimit();
 }
 
 void initialize()
 {
-    drive::initEncoders();
-    drive::initGyro();
-    lift::init();
+    //drive::initEncoders();
+    //drive::initGyro();
 }

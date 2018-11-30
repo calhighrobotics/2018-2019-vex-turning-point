@@ -13,6 +13,7 @@ void operatorControl()
 {
     initMotors();
     lcd::init();
+    lift::init();
 
     unsigned long wakeTime = millis();
     while (true)
@@ -30,7 +31,8 @@ void operatorControl()
         //lift::set(127 * joystick::lift());
         // after 1s of holding down the button, the lift should aim to be fully
         //  raised
-        static constexpr float liftIncrement = MOTOR_DELAY / 1000;
+        static constexpr float liftIncrement = MOTOR_DELAY / 100.f;
+        printf("lift: %.6f", lift::getCurrentPos() + liftIncrement * joystick::lift());
         lift::setTargetPos(lift::getCurrentPos() +
             liftIncrement * joystick::lift());
 
