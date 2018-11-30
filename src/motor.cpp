@@ -15,6 +15,7 @@ static Mutex requestedMutexes[MAX_MOTOR_PORTS];
 /** Slew rate management function. */
 static void slewRate()
 {
+    puts("slew rate start");
     // go through each requested motor power
     for (int i = 0; i < MAX_MOTOR_PORTS; ++i)
     {
@@ -31,6 +32,7 @@ static void slewRate()
         // update the motor
         motorSet(port, current + change);
     }
+    puts("slew rate done");
 }
 
 // declared in main.hpp
@@ -46,8 +48,11 @@ void initMotors()
 
 void motor::set(Port port, int power)
 {
+    puts("set motor");
     // ports are 1-based, but arrays are 0-based
     int i = port - 1;
+    if (!requestedMutexes[i]) return;
+    puts("actually set motor");
     mutexTake(requestedMutexes[i], 0);
     requested[i] = power;
     mutexGive(requestedMutexes[i]);

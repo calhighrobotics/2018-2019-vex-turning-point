@@ -1,5 +1,6 @@
 #include "pid.hpp"
 #include "main.hpp"
+#include <API.h>
 #include <cmath>
 
 void Velocity::update(int value, int deltaTime)
@@ -45,7 +46,9 @@ int PID::update(int value, int deltaTime)
     const float p = kP * (target - value);
 
     // power clamped to the interval [-127, 127]
-    return round(127 * tanh(p));
+    int power = round(127 * tanh(p));
+    printf("value: %d, p: %.2f, power: %d\n", value, (double) p, power);
+    return power;
 }
 
 void PID::setTargetPos(int pos)

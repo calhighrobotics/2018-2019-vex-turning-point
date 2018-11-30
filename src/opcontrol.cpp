@@ -13,7 +13,6 @@ void operatorControl()
 {
     initMotors();
     lcd::init();
-    //PID::initAll();
 
     unsigned long wakeTime = millis();
     while (true)

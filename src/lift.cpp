@@ -62,9 +62,10 @@ float lift::getCurrentPos()
 void lift::setTargetPos(float position)
 {
     // convert position to encoder ticks
-    position = ticksForExtension * std::max(0.f, std::min(position, 1.f));
-    leftPid.setTargetPos(position);
-    rightPid.setTargetPos(position);
+    int target = ticksForExtension * std::max(0.f, std::min(position, 1.f));
+    printf("target enc: %d", target);
+    leftPid.setTargetPos(target);
+    rightPid.setTargetPos(target);
 }
 
 void lift::set(int power)
