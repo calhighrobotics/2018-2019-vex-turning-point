@@ -68,7 +68,7 @@ void lift::setTargetPos(float position)
     position = std::max(0.f, std::min(position, 1.f));
     // convert position to encoder ticks
     int target = ticksForExtension * position;
-    printf("target pos: %.2f, enc: %d", position, target);
+    printf("target pos: %.2f, enc: %d\n", position, target);
     leftPid.setTargetPos(target);
     rightPid.setTargetPos(target);
 }

@@ -11,8 +11,11 @@
 
 void operatorControl()
 {
+    puts("motor init");
     initMotors();
+    puts("lcd init");
     lcd::init();
+    puts("lift init");
     lift::init();
 
     unsigned long wakeTime = millis();
