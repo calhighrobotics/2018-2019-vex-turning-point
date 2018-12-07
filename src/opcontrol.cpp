@@ -11,12 +11,9 @@
 
 void operatorControl()
 {
-    puts("motor init");
     initMotors();
-    puts("lcd init");
     lcd::init();
-    puts("lift init");
-    lift::init();
+    lift::init(); // FIXME: causes illegal instruction error
 
     unsigned long wakeTime = millis();
     while (true)

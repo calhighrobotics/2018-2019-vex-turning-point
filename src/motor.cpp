@@ -14,11 +14,9 @@ static MutexVar<int> requested[MAX_MOTOR_PORTS] = {};
 /** Slew rate management function. */
 static void slewRate()
 {
-    puts("slew rate");
     // go through each requested motor power
     for (int i = 0; i < MAX_MOTOR_PORTS; ++i)
     {
-        printf("slew rate port %d\n", i + 1);
         const Port port = static_cast<Port>(i + 1);
         const int current = motorGet(port);
 
@@ -28,9 +26,7 @@ static void slewRate()
 
         // update the motor
         motorSet(port, current + change);
-        printf("slew rate port %d done\n", i + 1);
     }
-    puts("slew rate done");
 }
 
 // declared in main.hpp

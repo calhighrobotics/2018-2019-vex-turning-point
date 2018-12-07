@@ -20,7 +20,7 @@ static void setLeft(int power)
 
 static MutexVar<int> leftPos = 0;
 static Encoder leftEnc = nullptr;
-static PID leftPid{ 1, 0, 0 };
+static PID leftPid;
 
 static void setRight(int power)
 {
@@ -29,13 +29,13 @@ static void setRight(int power)
 
 static MutexVar<int> rightPos = 0;
 static Encoder rightEnc = nullptr;
-static PID rightPid{ 1, 0, 0 };
+static PID rightPid;
 
 /** Updates the PIDs on the lift motors. */
 static void pidLoop()
 {
     leftPos = encoderGet(leftEnc);
-    setLeft(leftPid.update(leftPos, MOTOR_DELAY));
+    setLeft(leftPid.update(leftPos, MOTOR_DELAY)); // FIXME: illegal instruction
 
     rightPos = encoderGet(rightEnc);
     setRight(rightPid.update(rightPos, MOTOR_DELAY));
@@ -46,15 +46,15 @@ void lift::init()
     leftEnc = encoderInit(LIFT_LEFT_TOP, LIFT_LEFT_BOTTOM, /*reverse*/ true);
     encoderReset(leftEnc);
     leftPos.init();
-    leftPid.init();
+    leftPid.init(1, 0, 0);
 
     rightEnc = encoderInit(LIFT_RIGHT_TOP, LIFT_RIGHT_BOTTOM,
         /*reverse*/ false);
     encoderReset(rightEnc);
     rightPos.init();
-    rightPid.init();
+    rightPid.init(1, 0, 0);
 
-    taskRunLoop(pidLoop, MOTOR_DELAY);
+    taskRunLoop(pidLoop, MOTOR_DELAY); // FIXME: illegal instruction error
 }
 
 float lift::getCurrentPos()

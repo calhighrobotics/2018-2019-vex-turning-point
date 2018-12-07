@@ -37,16 +37,8 @@ private:
 class PID
 {
 public:
-    /**
-     * Creates a PID object.
-     * @param kP Proportional term coefficient.
-     * @param kI Integral term coefficient.
-     * @param kD Derivative term coefficient.
-     */
-    PID(float kP, float kI, float kD);
-
     /** Initializes the targetPos mutex var. */
-    void init();
+    void init(float kP, float kI, float kD);
 
     /**
      * Updates the PID.
@@ -64,15 +56,15 @@ public:
 
 private:
     /** Proportional term coefficient. */
-    const float kP;
+    float kP = 0;
     /** Integral term coefficient. */
-    const float kI;
+    float kI = 0;
     /** Derivative term coefficient. */
-    const float kD;
+    float kD = 0;
     /** Velocity tracker. Used in derivative term. */
     Velocity velocity;
     /** Target position. */
-    MutexVar<int> targetPos;
+    MutexVar<int> targetPos = 0;
 };
 
 #endif // PID_HPP

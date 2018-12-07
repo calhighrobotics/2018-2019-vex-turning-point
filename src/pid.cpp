@@ -27,11 +27,11 @@ void Velocity::addVel(int vel)
     if (oldest >= maxVelocities) oldest = 0;
 }
 
-PID::PID(float kP, float kI, float kD)
-    : kP{ kP }, kI{ kI }, kD{ kD }, targetPos{ 0 } {}
-
-void PID::init()
+void PID::init(float kP, float kI, float kD)
 {
+    this->kP = kP;
+    this->kI = kI;
+    this->kD = kD;
     targetPos.init();
 }
 
@@ -40,6 +40,7 @@ int PID::update(int value, int deltaTime)
     velocity.update(value, deltaTime);
 
     // determine which way we should go and by how much
+    // FIXME: illegal instruction error when doing float multiplication
     const float p = kP * (targetPos - value);
 
     // power clamped to the interval [-127, 127]
