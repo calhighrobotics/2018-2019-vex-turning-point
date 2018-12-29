@@ -40,7 +40,6 @@ int PID::update(int value, int deltaTime)
     velocity.update(value, deltaTime);
 
     // determine which way we should go and by how much
-    // FIXME: illegal instruction error when doing float multiplication
     const float p = kP * (targetPos - value);
 
     // power clamped to the interval [-127, 127]
