@@ -46,13 +46,13 @@ void lift::init()
     leftEnc = encoderInit(LIFT_LEFT_TOP, LIFT_LEFT_BOTTOM, /*reverse*/ true);
     encoderReset(leftEnc);
     leftPos.init();
-    leftPid.init(1, 0, 0);
+    leftPid.init(1.f / 31, 0, 0);
 
     rightEnc = encoderInit(LIFT_RIGHT_TOP, LIFT_RIGHT_BOTTOM,
         /*reverse*/ false);
     encoderReset(rightEnc);
     rightPos.init();
-    rightPid.init(1, 0, 0);
+    rightPid.init(1.f / 31, 0, 0);
 
     taskRunLoop(pidLoop, MOTOR_DELAY); // FIXME: illegal instruction error
 }
