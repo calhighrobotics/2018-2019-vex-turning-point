@@ -15,6 +15,15 @@ void grab(int direction);
  * @param power Wrist motor direction. 1 is clockwise, -1 is counterclockwise.
  */
 void rotate(int direction);
+
+/** Puts the cap intake into its up position to start the match. */
+void setup();
+
+/**
+ * Pitches the cap intake.
+ * @param direction Intake direction. 1 is down, -1 is up.
+ */
+void pitch(int direction);
 } // end namespace ballIntake
 
 #endif // BALLINTAKE_HPP

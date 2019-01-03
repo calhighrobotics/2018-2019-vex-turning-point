@@ -12,6 +12,8 @@ int driveRight();
 bool puncher();
 /** Gets the button value (-1, 0, 1) for the puncher motor direction. */
 int puncherDebug();
+/** Gets the button value (-1, 0, 1) for the cap pitch direction. */
+int capPitch();
 /** Gets the button value (-1, 0, 1) for the lift direction. */
 int lift();
 /** Gets the button value (-1, 0, 1) for the cap intake rotation direction. */

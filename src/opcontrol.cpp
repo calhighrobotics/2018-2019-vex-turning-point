@@ -24,6 +24,7 @@ void operatorControl()
         // TODO: move speed constants to component code
         puncher::set(127 * joystick::puncherDebug());
         lift::set(127 * joystick::lift());
+        capIntake::pitch(joystick::capPitch());
         capIntake::rotate(joystick::wrist());
         ballIntake::set(joystick::ballIntake());
 
