@@ -15,7 +15,7 @@ enum Port: unsigned char
     DRIVE_RB = 3,
     /** Left lift motor. */
     LIFT_LEFT = 4,
-    /** Cap intake pitch servo. */
+    /** Cap intake pitch motor. */
     CAP_PITCH = 5,
     /** Right lift motor. */
     LIFT_RIGHT = 6,

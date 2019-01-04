@@ -18,6 +18,6 @@ Auton getAuton();
 
 /** Sets the current auton state. */
 void setAuton(Auton value);
-}
+} // end namespace auton
 
 #endif // AUTO_HPP

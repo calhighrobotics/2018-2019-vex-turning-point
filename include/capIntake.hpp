@@ -18,9 +18,9 @@ void rotate(int direction);
 
 /**
  * Pitches the cap intake.
- * @param direction Intake direction. 1 is down, -1 is up.
+ * @param direction Intake direction. -1 is down, 1 is up.
  */
 void pitch(int direction);
-} // end namespace ballIntake
+} // end namespace capIntake
 
-#endif // BALLINTAKE_HPP
+#endif // CAPINTAKE_HPP
