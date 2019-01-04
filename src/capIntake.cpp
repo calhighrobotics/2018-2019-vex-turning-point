@@ -6,20 +6,15 @@ using namespace motor;
 /** Wrist rotation power. */
 static constexpr int wristPower = 127;
 /** Servo position up. */
-static constexpr int pitchUp = 90;
+static constexpr int pitchUp = 0;
 /** Servo position down. */
-static constexpr int pitchDown = 0;
+static constexpr int pitchDown = -90;
 
 void capIntake::rotate(int direction)
 {
     lock();
     set(WRIST, wristPower * direction);
     unlock();
-}
-
-void capIntake::setup()
-{
-    pitch(-1);
 }
 
 void capIntake::pitch(int direction)
