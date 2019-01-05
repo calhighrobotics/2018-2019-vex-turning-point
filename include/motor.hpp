@@ -4,7 +4,10 @@
 /** Motor-related functions. */
 namespace motor
 {
-/** All allocated motor ports. */
+/**
+ * All allocated motor ports. Ports 4-7 go into the power expander,
+ * corresponding to ports A-D.
+ */
 enum Port: unsigned char
 {
     /** Cap intake wrist. */
@@ -15,12 +18,12 @@ enum Port: unsigned char
     DRIVE_RB = 3,
     /** Left lift motor. */
     LIFT_LEFT = 4,
-    /** Cap intake pitch motor. */
-    CAP_PITCH = 5,
-    /** Right lift motor. */
-    LIFT_RIGHT = 6,
     /** Ball intake treads. */
-    BALL_INTAKE = 7,
+    BALL_INTAKE = 5,
+    /** Cap intake pitch motor. */
+    CAP_PITCH = 6,
+    /** Right lift motor. */
+    LIFT_RIGHT = 7,
     /** Left front drive. */
     DRIVE_LF = 8,
     /** Left back drive. */
