@@ -112,10 +112,12 @@ void autonSelect()
     // use left/right buttons to cycle between auton programs
     if (buttons.justPressed(LCD_BTN_LEFT))
     {
-        setAuton(static_cast<Auton>((getAuton() - 1) % NUM_AUTONS));
+        setAuton(static_cast<Auton>(
+                (getAuton() + NUM_AUTONS - 1) % NUM_AUTONS));
     }
     if (buttons.justPressed(LCD_BTN_RIGHT))
     {
-        setAuton(static_cast<Auton>((getAuton() + 1) % NUM_AUTONS));
+        setAuton(static_cast<Auton>(
+                (getAuton() + NUM_AUTONS + 1) % NUM_AUTONS));
     }
 }
