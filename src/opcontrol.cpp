@@ -6,10 +6,13 @@
 #include "lcd.hpp"
 #include "lift.hpp"
 #include "puncher.hpp"
+#include "speaker.hpp"
 #include <API.h>
 
 void operatorControl()
 {
+    speaker::init();
+    speaker::play();
     initMotors();
     lcd::init();
 
