@@ -13,7 +13,7 @@ void operatorControl()
 {
     initMotors();
     lcd::init();
-    lift::init();
+    //lift::init();
 
     unsigned long wakeTime = millis();
     while (true)
@@ -29,11 +29,11 @@ void operatorControl()
         capIntake::rotate(joystick::wrist());
         ballIntake::set(joystick::ballIntake());
 
-        //lift::set(127 * joystick::lift());
-        static constexpr float liftIncrement = 0.5;
+        lift::set(127 * joystick::lift());
+        /*static constexpr float liftIncrement = 0.5;
         int l = joystick::lift();
         lift::setTargetPos(lift::getCurrentPos() +
-            (l > 0 ? liftIncrement : l < 0 ? -liftIncrement : 0));
+            (l > 0 ? liftIncrement : l < 0 ? -liftIncrement : 0));*/
 
         // wait for the motors to update before receiving input again
         taskDelayUntil(&wakeTime, MOTOR_DELAY);
