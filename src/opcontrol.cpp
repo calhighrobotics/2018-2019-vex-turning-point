@@ -13,7 +13,7 @@ void operatorControl()
 {
     initMotors();
     lcd::init();
-    lift::init(); // FIXME: causes illegal instruction error
+    lift::init();
 
     unsigned long wakeTime = millis();
     while (true)

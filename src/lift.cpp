@@ -35,9 +35,11 @@ static PID rightPid;
 static void pidLoop()
 {
     leftPos = encoderGet(leftEnc);
-    setLeft(leftPid.update(leftPos, MOTOR_DELAY)); // FIXME: illegal instruction
+    fputs("left: ", stdout);
+    setLeft(leftPid.update(leftPos, MOTOR_DELAY));
 
     rightPos = encoderGet(rightEnc);
+    fputs("right: ", stdout);
     setRight(rightPid.update(rightPos, MOTOR_DELAY));
 }
 
@@ -54,7 +56,7 @@ void lift::init()
     rightPos.init();
     rightPid.init(1.f / 31, 0, 0);
 
-    taskRunLoop(pidLoop, MOTOR_DELAY); // FIXME: illegal instruction error
+    taskRunLoop(pidLoop, MOTOR_DELAY);
 }
 
 float lift::getCurrentPos()
@@ -68,7 +70,7 @@ void lift::setTargetPos(float position)
     position = std::max(0.f, std::min(position, 1.f));
     // convert position to encoder ticks
     int target = ticksForExtension * position;
-    printf("target pos: %.2f, enc: %d\n", position, target);
+    printf("target pos: %.2f, target enc: %d\n", position, target);
     leftPid.setTargetPos(target);
     rightPid.setTargetPos(target);
 }
@@ -77,4 +79,16 @@ void lift::set(int power)
 {
     setLeft(power);
     setRight(power);
+}
+
+void lift::kP(float inc)
+{
+    leftPid.kP += inc;
+    rightPid.kP += inc;
+}
+
+float lift::kP()
+{
+    // both PIDs are handled separately, but they should have similar constants
+    return (leftPid.kP + rightPid.kP) / 2;
 }

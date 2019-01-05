@@ -54,13 +54,14 @@ public:
      */
     void setTargetPos(int pos);
 
-private:
     /** Proportional term coefficient. */
     float kP = 0;
     /** Integral term coefficient. */
     float kI = 0;
     /** Derivative term coefficient. */
     float kD = 0;
+
+private:
     /** Velocity tracker. Used in derivative term. */
     Velocity velocity;
     /** Target position. */

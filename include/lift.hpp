@@ -24,6 +24,12 @@ void setTargetPos(float position);
  * @param power Motor power.
  */
 void set(int power);
+
+/** Adds `inc` onto the lift's kP constant. */
+void kP(float inc);
+
+/** Gets the lift's kP constant. */
+float kP();
 } // end namespace lift
 
 #endif // LIFT_HPP
