@@ -6,6 +6,6 @@ namespace lcd
 {
 /** Initializes the LCD controller. Called after `initialize()`. */
 void init();
-}
+} // end namespace lcd
 
 #endif // LCD_HPP
