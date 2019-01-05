@@ -1,6 +1,8 @@
 #include "auto.hpp"
 #include "drive.hpp"
 #include "main.hpp"
+#include "lcd.hpp"
+#include "lift.hpp"
 #include "puncher.hpp"
 #include <API.h>
 
@@ -59,6 +61,10 @@ static void driveLaunch()
 // declared in main.hpp
 void autonomous()
 {
+    initMotors();
+    lcd::init();
+    lift::init();
+
     switch (autonState)
     {
         case NOTHING:

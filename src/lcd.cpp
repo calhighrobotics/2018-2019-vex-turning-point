@@ -1,5 +1,6 @@
-#include "auto.hpp"
 #include "lcd.hpp"
+#include "auto.hpp"
+#include "lift.hpp"
 #include <API.h>
 
 /** LCD port. */
@@ -64,14 +65,16 @@ void lcd::init()
 
 /** Selects the auton program. */
 static void autonSelect();
+/** Adjusts the lift kP constant. */
+static void liftP();
 
 void lcdEventLoop()
 {
     enum LCDState
     {
-        MAIN, BATTERY, AUTON_SELECT, NUM_STATES
+        MAIN, BATTERY, AUTON_SELECT, LIFT_P, NUM_STATES
     };
-    static LCDState state = AUTON_SELECT;
+    static LCDState state = LIFT_P;
 
     buttons.poll();
     lcdClear(port);
@@ -90,6 +93,10 @@ void lcdEventLoop()
         case AUTON_SELECT:
             // autonomous program selection
             autonSelect();
+            break;
+        case LIFT_P:
+            // adjust lift kP constant
+            liftP();
             break;
         default:
             lcdPrint(port, 1, "Unknown state %d", static_cast<int>(state));
@@ -120,4 +127,15 @@ void autonSelect()
         setAuton(static_cast<Auton>(
                 (getAuton() + NUM_AUTONS + 1) % NUM_AUTONS));
     }
+}
+
+void liftP()
+{
+    lcdPrint(port, 1, "lift kP: %.1f", lift::kP());
+    lcdPrint(port, 2, "-              +");
+
+    // change kP by 0.1
+    static constexpr float inc = .1;
+    if (buttons.pressed(LCD_BTN_LEFT)) lift::kP(-inc);
+    else if (buttons.pressed(LCD_BTN_RIGHT)) lift::kP(inc);
 }

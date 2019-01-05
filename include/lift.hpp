@@ -4,11 +4,8 @@
 /** Lift-related functions. */
 namespace lift
 {
-/** Initializes the lift encoders. */
-void initEncoders();
-
-/** Initializes the event loop to adjust motors. */
-void initEventLoop();
+/** Initializes the lift encoders and PID task. */
+void init();
 
 /**
  * Gets the current lift position.
@@ -27,6 +24,12 @@ void setTargetPos(float position);
  * @param power Motor power.
  */
 void set(int power);
+
+/** Adds `inc` onto the lift's kP constant. */
+void kP(float inc);
+
+/** Gets the lift's kP constant. */
+float kP();
 } // end namespace lift
 
 #endif // LIFT_HPP

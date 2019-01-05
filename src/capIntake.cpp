@@ -12,14 +12,10 @@ static constexpr int pitchDown = -127;
 
 void capIntake::rotate(int direction)
 {
-    lock();
     set(WRIST, wristPower * direction);
-    unlock();
 }
 
 void capIntake::pitch(int direction)
 {
-    lock();
     set(CAP_PITCH, direction == 1 ? pitchUp : direction == -1 ? pitchDown : 0);
-    unlock();
 }

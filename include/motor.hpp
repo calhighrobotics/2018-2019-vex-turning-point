@@ -35,19 +35,7 @@ enum Port: unsigned char
 };
 
 /**
- * Sets an internal lock to allow a series of calls to {@link set} to be made.
- */
-void lock();
-
-/**
- * Signals the motor management thread that the user is no longer trying to set
- * the motors.
- */
-void unlock();
-
-/**
- * Sets a motor to a given power. It's recommended to use this function rather
- * than motorSet.
+ * Sets a motor to a given power. Use this function rather than motorSet.
  * @param port Port to be powered.
  * @param power Motor power.
  */

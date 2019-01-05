@@ -1,19 +1,12 @@
 #include "pid.hpp"
 #include "main.hpp"
+#include <API.h>
 #include <cmath>
 
-Velocity::Velocity(MotorGetter get): oldest{ 0 }, lastValue{ 0 }, get{ get } {}
-
-void Velocity::update(int deltaTime)
+void Velocity::update(int value, int deltaTime)
 {
-    const int value = get();
     addVel((float) (value - lastValue) / deltaTime);
     lastValue = value;
-}
-
-int Velocity::getPos() const
-{
-    return lastValue;
 }
 
 float Velocity::getVel() const
@@ -34,57 +27,29 @@ void Velocity::addVel(int vel)
     if (oldest >= maxVelocities) oldest = 0;
 }
 
-TaskHandle PID::pidTask = nullptr;
-std::vector<PID*> PID::pids;
-
-void PID::initAll()
+void PID::init(float kP, float kI, float kD)
 {
-    pidTask = taskRunLoop(eventLoop, MOTOR_DELAY);
+    this->kP = kP;
+    this->kI = kI;
+    this->kD = kD;
+    targetPos.init();
 }
 
-void PID::eventLoop()
+int PID::update(int value, int deltaTime)
 {
-    for (PID* pid : pids)
-    {
-        if (pid) pid->update(MOTOR_DELAY);
-    }
-}
+    velocity.update(value, deltaTime);
 
-PID::PID(float p, float i, float d, MotorGetter get, MotorSetter set)
-    : uid{ pids.size() }, p{ p }, i{ i }, d{ d }, get{ get }, set{ set },
-    velocity{ get }, targetMutex{ mutexCreate() }, targetPos{ 0 }
-{
-    pids.push_back(this);
-}
+    // determine which way we should go and by how much
+    const float p = kP * (targetPos - value);
 
-PID::~PID()
-{
-    pids[uid] = nullptr;
-}
-
-int PID::getCurrentPos() const
-{
-    return get();
+    // power clamped to the interval [-127, 127]
+    // the tanh smooths the curve
+    int power = round(127 * tanh(p));
+    printf("value: %d, p: %.2f, power: %d\n", value, p, power);
+    return power;
 }
 
 void PID::setTargetPos(int pos)
 {
-    mutexTake(targetMutex, 0);
     targetPos = pos;
-    mutexGive(targetMutex);
-}
-
-void PID::update(int deltaTime)
-{
-    velocity.update(deltaTime);
-
-    // determine which way we should go and by how much
-    const int currentPos = velocity.getPos();
-    mutexTake(targetMutex, 0);
-    const int posError = targetPos - currentPos;
-    mutexGive(targetMutex);
-
-    // calculate power (clamped to the interval [-127, 127]) given encoder delta
-    const int power = round(127 * tanh(p * posError));
-    set(power);
 }

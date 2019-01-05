@@ -1,32 +1,19 @@
 #ifndef PID_HPP
 #define PID_HPP
 
+#include "mutexVar.hpp"
 #include <API.h>
-#include <vector>
-
-/** Gets the current position. */
-using MotorGetter = int(*)();
-/** Sets the motor power. */
-using MotorSetter = void(*)(int);
 
 /** Tracks the position and velocity of a side of the lift. */
 class Velocity
 {
 public:
     /**
-     * Creates a Velocity tracker object.
-     * @param get Position getter.
-     */
-    Velocity(MotorGetter get);
-
-    /**
      * Updates position and velocity tracking data.
+     * @param value Encoder value.
      * @param deltaTime Time in milliseconds between last update.
      */
-    void update(int deltaTime);
-
-    /** Gets the last-recorded position. */
-    int getPos() const;
+    void update(int value, int deltaTime);
 
     /** Gets the velocity in ticks per millisecond. */
     float getVel() const;
@@ -41,33 +28,25 @@ private:
     /** Tracks the last `maxVelocities` to calculate the rolling average. */
     float velocities[maxVelocities] = {0};
     /** Position of the oldest velocity value in the queue. */
-    int oldest;
+    int oldest = 0;
     /** Value of the last position. Used in differentiation. */
-    int lastValue;
-    /** Gets the current position. */
-    MotorGetter get;
+    int lastValue = 0;
 };
 
 /** PID position controller. */
 class PID
 {
 public:
-    /** Initializes the event loop task. */
-    static void initAll();
+    /** Initializes the targetPos mutex var. */
+    void init(float kP, float kI, float kD);
 
     /**
-     * Creates a PID object.
-     * @param p Proportional term.
-     * @param i Integral term.
-     * @param d Derivative term.
-     * @param get Position getter.
-     * @param set Motor group setter.
+     * Updates the PID.
+     * @param value Encoder value.
+     * @param deltaTime Delta time in ms.
+     * @returns The power at which to set the motors.
      */
-    PID(float p, float i, float d, MotorGetter get, MotorSetter set);
-    ~PID();
-
-    /** Gets the current position of the PID in encoder ticks. */
-    int getCurrentPos() const;
+    int update(int value, int deltaTime);
 
     /**
      * Sets the target position of the PID in encoder ticks. Protected by a
@@ -75,38 +54,18 @@ public:
      */
     void setTargetPos(int pos);
 
+    /** Proportional term coefficient. */
+    float kP = 0;
+    /** Integral term coefficient. */
+    float kI = 0;
+    /** Derivative term coefficient. */
+    float kD = 0;
+
 private:
-    /** Manages the event loop task. */
-    static TaskHandle pidTask;
-    /** All registered PID objects. */
-    static std::vector<PID*> pids;
-    /** Event loop task. */
-    static void eventLoop();
-
-    /**
-     * Updates the PID.
-     * @param deltaTime Delta time in ms.
-     */
-    void update(int deltaTime);
-
-    /** Unique id. Used in deregistering after destruction. */
-    const size_t uid;
-    /** Proportional term. */
-    const float p;
-    /** Integral term. */
-    const float i;
-    /** Derivative term. */
-    const float d;
-    /** Position getter. */
-    const MotorGetter get;
-    /** Motor group setter. */
-    const MotorSetter set;
     /** Velocity tracker. Used in derivative term. */
     Velocity velocity;
-    /** Mutex for setting targetPos. */
-    Mutex targetMutex;
     /** Target position. */
-    int targetPos;
+    MutexVar<int> targetPos = 0;
 };
 
 #endif // PID_HPP

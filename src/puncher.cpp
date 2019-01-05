@@ -7,12 +7,26 @@
 using namespace motor;
 using namespace sensor;
 
-/** Power to set the puncher at. */
-static constexpr int POWER = 127;
-/** Task for going through the process of launching. */
-static void launchTask(void*);
+/** Power to set the puncher at when launching. */
+static constexpr int launchPower = 127;
 /** Current task handle while launching. */
 static TaskHandle handle = nullptr;
+
+/** Task for going through the process of launching. */
+static void launchTask(void*)
+{
+    // start puncher
+    puncher::set(launchPower);
+    // the limit switch may already be pressed so wait for it to pass that
+    while (digitalRead(PUNCHER_LIMIT) == HIGH) taskDelay(MOTOR_DELAY);
+    // wait until the slip gear completes a revolution
+    while (digitalRead(PUNCHER_LIMIT) == LOW) taskDelay(MOTOR_DELAY);
+    // stop puncher
+    puncher::set(0);
+
+    // this task is now completed
+    handle = nullptr;
+}
 
 void puncher::initLimit()
 {
@@ -21,9 +35,7 @@ void puncher::initLimit()
 
 void puncher::set(int power)
 {
-    lock();
     set(PUNCHER, -power);
-    unlock();
 }
 
 void puncher::launch()
@@ -37,23 +49,3 @@ void puncher::launch()
     }
 }
 
-void launchTask(void*)
-{
-    // start puncher
-    puncher::set(POWER);
-    // the limit switch may already be pressed so wait for it to pass that
-    while (digitalRead(PUNCHER_LIMIT) == HIGH)
-    {
-        taskDelay(MOTOR_DELAY);
-    }
-    // wait until the slip gear completes a revolution
-    while (digitalRead(PUNCHER_LIMIT) == LOW)
-    {
-        taskDelay(MOTOR_DELAY);
-    }
-    // stop puncher
-    puncher::set(0);
-
-    // this task is now completed
-    handle = nullptr;
-}
