@@ -131,7 +131,7 @@ void autonSelect()
 
 void liftP()
 {
-    lcdPrint(port, 1, "lift kP: %.1f", lift::kP());
+    lcdPrint(port, 1, "kP: %.1f pos: %.1f", lift::kP(), lift::getCurrentPos());
     lcdPrint(port, 2, "-              +");
 
     // change kP by 0.1
