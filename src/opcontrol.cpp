@@ -7,10 +7,13 @@
 #include "lift.hpp"
 #include "pid.hpp"
 #include "puncher.hpp"
+#include "speaker.hpp"
 #include <API.h>
 
 void operatorControl()
 {
+    speaker::init();
+    speaker::play();
     initMotors();
     lcd::init();
     //lift::init();
