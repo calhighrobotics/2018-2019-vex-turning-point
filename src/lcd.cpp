@@ -67,12 +67,14 @@ void lcd::init()
 static void autonSelect();
 /** Adjusts the lift kP constant. */
 static void liftP();
+/** Enables/disables the PID. */
+static void pidEnable();
 
 void lcdEventLoop()
 {
     enum LCDState
     {
-        MAIN, BATTERY, AUTON_SELECT, LIFT_P, NUM_STATES
+        MAIN, BATTERY, AUTON_SELECT, LIFT_P, PID_ENABLE, NUM_STATES
     };
     static LCDState state = LIFT_P;
 
@@ -91,12 +93,13 @@ void lcdEventLoop()
             lcdPrint(port, 2, "Backup:  %.1fV", powerLevelBackup() / 1000.f);
             break;
         case AUTON_SELECT:
-            // autonomous program selection
             autonSelect();
             break;
         case LIFT_P:
-            // adjust lift kP constant
             liftP();
+            break;
+        case PID_ENABLE:
+            pidEnable();
             break;
         default:
             lcdPrint(port, 1, "Unknown state %d", static_cast<int>(state));
@@ -113,8 +116,8 @@ void autonSelect()
     using namespace auton;
 
     // display each line of the auton names
-    lcdPrint(port, 1, autonNames[getAuton()][0]);
-    lcdPrint(port, 2, autonNames[getAuton()][1]);
+    lcdSetText(port, 1, autonNames[getAuton()][0]);
+    lcdSetText(port, 2, autonNames[getAuton()][1]);
 
     // use left/right buttons to cycle between auton programs
     if (buttons.justPressed(LCD_BTN_LEFT))
@@ -132,10 +135,20 @@ void autonSelect()
 void liftP()
 {
     lcdPrint(port, 1, "kP: %.1f pos: %.1f", lift::kP(), lift::getCurrentPos());
-    lcdPrint(port, 2, "-              +");
+    lcdSetText(port, 2, "-              +");
 
     // change kP by 0.1
     static constexpr float inc = .1;
     if (buttons.pressed(LCD_BTN_LEFT)) lift::kP(-inc);
     else if (buttons.pressed(LCD_BTN_RIGHT)) lift::kP(inc);
+}
+
+void pidEnable()
+{
+    lcdPrint(port, 1, "PID: %s",
+        lift::isPidEnabled() ? "enabled" : "disabled");
+    lcdSetText(port, 2, "D              E");
+
+    if (buttons.pressed(LCD_BTN_LEFT)) lift::disablePid();
+    else if (buttons.pressed(LCD_BTN_RIGHT)) lift::enablePid();
 }

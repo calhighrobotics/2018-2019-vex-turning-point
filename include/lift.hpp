@@ -5,10 +5,13 @@
 namespace lift
 {
 /** Initializes the lift encoders and PID task. */
-void init();
+void enablePid();
+
+/** Checks whether the PID task is on. */
+bool isPidEnabled();
 
 /** Kills the lift PID task and deinitializes encoders. */
-void kill();
+void disablePid();
 
 /**
  * Gets the current lift position.

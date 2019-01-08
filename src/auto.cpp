@@ -63,7 +63,7 @@ void autonomous()
 {
     initMotors();
     lcd::init();
-    lift::init();
+    lift::enablePid();
 
     switch (autonState)
     {

@@ -39,7 +39,7 @@ static void pidLoop()
 {
     if (stopPid)
     {
-        set(0);
+        lift::set(0);
         encoderShutdown(leftEnc);
         encoderShutdown(rightEnc);
         taskDelete(nullptr);
@@ -55,7 +55,7 @@ static void pidLoop()
     setRight(rightPid.update(rightPos, MOTOR_DELAY));
 }
 
-void lift::init()
+void lift::enablePid()
 {
     leftEnc = encoderInit(LIFT_LEFT_TOP, LIFT_LEFT_BOTTOM, /*reverse*/ true);
     encoderReset(leftEnc);
@@ -71,7 +71,12 @@ void lift::init()
     taskRunLoop(pidLoop, MOTOR_DELAY);
 }
 
-void lift::kill()
+bool lift::isPidEnabled()
+{
+    return !stopPid;
+}
+
+void lift::disablePid()
 {
     stopPid = true;
 }

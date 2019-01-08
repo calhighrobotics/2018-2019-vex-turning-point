@@ -16,7 +16,7 @@ void operatorControl()
     speaker::play();
     initMotors();
     lcd::init();
-    //lift::init();
+    //lift::enablePid();
 
     unsigned long wakeTime = millis();
     while (true)
@@ -26,18 +26,20 @@ void operatorControl()
         drive::right(joystick::driveRight());
 
         if (joystick::puncher()) puncher::launch();
-        if (joystick::liftKill()) lift::kill();
         // TODO: move speed constants to component code
         puncher::set(127 * joystick::puncherDebug());
         capIntake::pitch(joystick::capPitch());
         capIntake::rotate(joystick::wrist());
         ballIntake::set(joystick::ballIntake());
 
-        lift::set(127 * joystick::lift());
-        /*static constexpr float liftIncrement = 0.5;
-        int l = joystick::lift();
-        lift::setTargetPos(lift::getCurrentPos() +
-            (l > 0 ? liftIncrement : l < 0 ? -liftIncrement : 0));*/
+        if (lift::isPidEnabled())
+        {
+            static constexpr float liftIncrement = 0.5;
+            int l = joystick::lift();
+            lift::setTargetPos(lift::getCurrentPos() +
+                (l > 0 ? liftIncrement : l < 0 ? -liftIncrement : 0));
+        }
+        else lift::set(127 * joystick::lift());
 
         // wait for the motors to update before receiving input again
         taskDelayUntil(&wakeTime, MOTOR_DELAY);
