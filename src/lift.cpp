@@ -31,9 +31,21 @@ static MutexVar<int> rightPos = 0;
 static Encoder rightEnc = nullptr;
 static PID rightPid;
 
+/** Whether the PID task should be deinitialized. */
+static bool stopPid = false;
+
 /** Updates the PIDs on the lift motors. */
 static void pidLoop()
 {
+    if (stopPid)
+    {
+        set(0);
+        encoderShutdown(leftEnc);
+        encoderShutdown(rightEnc);
+        taskDelete(nullptr);
+        return;
+    }
+
     leftPos = encoderGet(leftEnc);
     fputs("left: ", stdout);
     setLeft(leftPid.update(leftPos, MOTOR_DELAY));
@@ -57,6 +69,11 @@ void lift::init()
     rightPid.init(1.f / 31, 0, 0);
 
     taskRunLoop(pidLoop, MOTOR_DELAY);
+}
+
+void lift::kill()
+{
+    stopPid = true;
 }
 
 float lift::getCurrentPos()

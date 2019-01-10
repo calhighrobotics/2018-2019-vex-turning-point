@@ -68,6 +68,11 @@ int joystick::wrist()
     return buttonControl(wristClockwise, wristCounterClockwise);
 }
 
+bool joystick::liftKill()
+{
+    return joystickGetDigital(1, 7, JOY_DOWN);
+}
+
 int joystick::ballIntake()
 {
     bool intakeForward = joystickGetDigital(1, 6, JOY_UP);

@@ -18,6 +18,8 @@ int capPitch();
 int lift();
 /** Gets the button value (-1, 0, 1) for the cap intake rotation direction. */
 int wrist();
+/** Gets the button value for killing the lift task. */
+bool liftKill();
 /** Gets the button value (-1, 0, 1) for the ball intake. */
 int ballIntake();
 } // end namespace joystick

@@ -26,6 +26,7 @@ void operatorControl()
         drive::right(joystick::driveRight());
 
         if (joystick::puncher()) puncher::launch();
+        if (joystick::liftKill()) lift::kill();
         // TODO: move speed constants to component code
         puncher::set(127 * joystick::puncherDebug());
         capIntake::pitch(joystick::capPitch());

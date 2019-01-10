@@ -7,6 +7,9 @@ namespace lift
 /** Initializes the lift encoders and PID task. */
 void init();
 
+/** Kills the lift PID task and deinitializes encoders. */
+void kill();
+
 /**
  * Gets the current lift position.
  * @returns A value from 0 to 1 specifying current extension of the lift.
