@@ -17,6 +17,7 @@ void operatorControl()
     initMotors();
     lcd::init();
     //lift::enablePid();
+    lift::disablePid();
 
     unsigned long wakeTime = millis();
     while (true)
