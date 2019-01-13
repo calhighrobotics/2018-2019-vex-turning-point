@@ -57,6 +57,8 @@ static void pidLoop()
 
 void lift::enablePid()
 {
+    stopPid = false;
+
     leftEnc = encoderInit(LIFT_LEFT_TOP, LIFT_LEFT_BOTTOM, /*reverse*/ true);
     encoderReset(leftEnc);
     leftPos.init();
