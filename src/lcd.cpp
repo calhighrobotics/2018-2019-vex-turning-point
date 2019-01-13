@@ -149,6 +149,12 @@ void pidEnable()
         lift::isPidEnabled() ? "enabled" : "disabled");
     lcdSetText(port, 2, "D              E");
 
-    if (buttons.pressed(LCD_BTN_LEFT)) lift::disablePid();
-    else if (buttons.pressed(LCD_BTN_RIGHT)) lift::enablePid();
+    if (buttons.pressed(LCD_BTN_LEFT) && lift::isPidEnabled())
+    {
+        lift::disablePid();
+    }
+    else if (buttons.pressed(LCD_BTN_RIGHT) && !lift::isPidEnabled())
+    {
+        lift::enablePid();
+    }
 }
