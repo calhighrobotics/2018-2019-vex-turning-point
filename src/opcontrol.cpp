@@ -16,8 +16,8 @@ void operatorControl()
     speaker::play();
     initMotors();
     lcd::init();
-    //lift::enablePid();
-    lift::disablePid();
+    lift::enablePid();
+    //lift::disablePid();
 
     unsigned long wakeTime = millis();
     while (true)
@@ -35,10 +35,13 @@ void operatorControl()
 
         if (lift::isPidEnabled())
         {
-            static constexpr float liftIncrement = 0.5;
+            static constexpr float liftIncrement = 0.1;
             int l = joystick::lift();
-            lift::setTargetPos(lift::getCurrentPos() +
-                (l > 0 ? liftIncrement : l < 0 ? -liftIncrement : 0));
+            if (l)
+            {
+                lift::setTargetPos(lift::getCurrentPos() +
+                    (l > 0 ? liftIncrement : l < 0 ? -liftIncrement : 0));
+            }
         }
         else lift::set(127 * joystick::lift());
 
