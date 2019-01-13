@@ -35,15 +35,19 @@ void operatorControl()
 
         if (lift::isPidEnabled())
         {
+            // set the lift target position (liftIncrement*100)% above/below the
+            //  current position
             static constexpr float liftIncrement = 0.1;
             int l = joystick::lift();
+            // target pos should stay if the lift buttons aren't pressed,
+            //  meaning it should hold its position
             if (l)
             {
                 lift::setTargetPos(lift::getCurrentPos() +
                     (l > 0 ? liftIncrement : l < 0 ? -liftIncrement : 0));
             }
         }
-        else lift::set(127 * joystick::lift());
+        else lift::set(joystick::lift());
 
         // wait for the motors to update before receiving input again
         taskDelayUntil(&wakeTime, MOTOR_DELAY);

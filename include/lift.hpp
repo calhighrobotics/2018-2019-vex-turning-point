@@ -27,9 +27,9 @@ void setTargetPos(float position);
 
 /**
  * Sets the lift motors.
- * @param power Motor power.
+ * @param direction Lift direction. -1 is down, 1 is up.
  */
-void set(int power);
+void set(int direction);
 
 /** Adds `inc` onto the lift's kP constant. */
 void kP(float inc);

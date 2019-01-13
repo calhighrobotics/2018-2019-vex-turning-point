@@ -7,14 +7,17 @@
 #include <API.h>
 #include <algorithm>
 
-using namespace motor;
-using namespace sensor;
-
 /** How many encoder ticks between fully retracted and extended. */
 static constexpr int ticksForExtension = 80;
 
+/** Power when fully raising the lift. */
+static constexpr int upPower = 127;
+/** Power when fully lowering the lift. Adjusted for gravity. */
+static constexpr int downPower = -95;
+
 static void setLeft(int power)
 {
+    using namespace motor;
     set(LIFT_LEFT, power);
 }
 
@@ -24,6 +27,7 @@ static PID leftPid;
 
 static void setRight(int power)
 {
+    using namespace motor;
     set(LIFT_RIGHT, -power);
 }
 
@@ -34,6 +38,24 @@ static PID rightPid;
 /** Whether the PID task should be deinitialized. */
 static bool stopPid = true;
 
+/**
+ * Translates a power value from the PID loop to one that's suitable for the
+ * lift.
+ * @param power Desired motor power from -127 to 127.
+ * @returns A scaled power value in the range [downPower, upPower] using the
+ * constants defined above.
+ */
+static int translatePower(int power)
+{
+    // turn power into a nonnegative number
+    power += 127;
+    // scale units from -127/127 to downPower/upPower
+    power = power * (upPower - downPower + 1) / 255;
+    // translate back down into the negative space
+    power += downPower;
+    return power;
+}
+
 /** Updates the PIDs on the lift motors. */
 static void pidLoop()
 {
@@ -42,21 +64,24 @@ static void pidLoop()
         lift::set(0);
         encoderShutdown(leftEnc);
         encoderShutdown(rightEnc);
+        // delete this task
         taskDelete(nullptr);
         return;
     }
 
     leftPos = encoderGet(leftEnc);
     fputs("left: ", stdout);
-    setLeft(leftPid.update(leftPos, MOTOR_DELAY));
+    setLeft(translatePower(leftPid.update(leftPos, MOTOR_DELAY)));
 
     rightPos = encoderGet(rightEnc);
     fputs("right: ", stdout);
-    setRight(rightPid.update(rightPos, MOTOR_DELAY));
+    setRight(translatePower(rightPid.update(rightPos, MOTOR_DELAY)));
 }
 
 void lift::enablePid()
 {
+    using namespace sensor;
+
     if (isPidEnabled()) return;
     stopPid = false;
 
@@ -100,8 +125,12 @@ void lift::setTargetPos(float position)
     rightPid.setTargetPos(target);
 }
 
-void lift::set(int power)
+void lift::set(int direction)
 {
+    int power;
+    if (direction < 0) power = downPower;
+    else if (direction > 0) power = upPower;
+    else power = 0;
     setLeft(power);
     setRight(power);
 }
