@@ -32,7 +32,7 @@ static Encoder rightEnc = nullptr;
 static PID rightPid;
 
 /** Whether the PID task should be deinitialized. */
-static bool stopPid = false;
+static bool stopPid = true;
 
 /** Updates the PIDs on the lift motors. */
 static void pidLoop()
@@ -63,13 +63,13 @@ void lift::enablePid()
     leftEnc = encoderInit(LIFT_LEFT_TOP, LIFT_LEFT_BOTTOM, /*reverse*/ true);
     encoderReset(leftEnc);
     leftPos.init();
-    leftPid.init(1.f / 31, 0, 0);
+    leftPid.init(4.f / 31, 0, 0);
 
     rightEnc = encoderInit(LIFT_RIGHT_TOP, LIFT_RIGHT_BOTTOM,
         /*reverse*/ false);
     encoderReset(rightEnc);
     rightPos.init();
-    rightPid.init(1.f / 31, 0, 0);
+    rightPid.init(4.f / 31, 0, 0);
 
     taskRunLoop(pidLoop, MOTOR_DELAY);
 }
