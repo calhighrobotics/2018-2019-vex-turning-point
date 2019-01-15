@@ -42,18 +42,12 @@ static bool stopPid = true;
  * Translates a power value from the PID loop to one that's suitable for the
  * lift.
  * @param power Desired motor power from -127 to 127.
- * @returns A scaled power value in the range [downPower, upPower] using the
+ * @returns A clamped power value in the range [downPower, upPower] using the
  * constants defined above.
  */
 static int translatePower(int power)
 {
-    // turn power into a nonnegative number
-    power += 127;
-    // scale units from -127/127 to downPower/upPower
-    power = power * (upPower - downPower + 1) / 255;
-    // translate back down into the negative space
-    power += downPower;
-    return power;
+    return std::max(downPower, std::min(power, upPower));
 }
 
 /** Updates the PIDs on the lift motors. */
