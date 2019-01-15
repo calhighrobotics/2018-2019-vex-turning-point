@@ -16,8 +16,8 @@ void operatorControl()
     speaker::play();
     initMotors();
     lcd::init();
-    lift::enablePid();
-    //lift::disablePid();
+    //lift::enablePid();
+    lift::disablePid();
 
     unsigned long wakeTime = millis();
     while (true)
