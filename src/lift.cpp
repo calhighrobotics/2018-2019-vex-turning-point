@@ -134,15 +134,3 @@ void lift::set(int direction)
     setLeft(power);
     setRight(power);
 }
-
-void lift::kP(float inc)
-{
-    leftPid.kP += inc;
-    rightPid.kP += inc;
-}
-
-float lift::kP()
-{
-    // both PIDs are handled separately, but they should have similar constants
-    return (leftPid.kP + rightPid.kP) / 2;
-}

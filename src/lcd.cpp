@@ -66,7 +66,7 @@ void lcd::init()
 /** Selects the auton program. */
 static void autonSelect();
 /** Adjusts the lift kP constant. */
-static void liftP();
+static void liftPos();
 /** Enables/disables the PID. */
 static void pidEnable();
 
@@ -74,9 +74,9 @@ void lcdEventLoop()
 {
     enum LCDState
     {
-        MAIN, BATTERY, AUTON_SELECT, LIFT_P, PID_ENABLE, NUM_STATES
+        MAIN, BATTERY, AUTON_SELECT, LIFT_POS, PID_ENABLE, NUM_STATES
     };
-    static LCDState state = LIFT_P;
+    static LCDState state = LIFT_POS;
 
     buttons.poll();
     lcdClear(port);
@@ -95,8 +95,8 @@ void lcdEventLoop()
         case AUTON_SELECT:
             autonSelect();
             break;
-        case LIFT_P:
-            liftP();
+        case LIFT_POS:
+            liftPos();
             break;
         case PID_ENABLE:
             pidEnable();
@@ -132,15 +132,10 @@ void autonSelect()
     }
 }
 
-void liftP()
+void liftPos()
 {
-    lcdPrint(port, 1, "kP: %.1f pos: %.1f", lift::kP(), lift::getCurrentPos());
-    lcdSetText(port, 2, "-              +");
-
-    // change kP by 0.1
-    static constexpr float inc = .1;
-    if (buttons.pressed(LCD_BTN_LEFT)) lift::kP(-inc);
-    else if (buttons.pressed(LCD_BTN_RIGHT)) lift::kP(inc);
+    lcdPrint(port, 1, "pos: %.1f", lift::getCurrentPos());
+    lcdSetText(port, 2, "");
 }
 
 void pidEnable()

@@ -30,12 +30,6 @@ void setTargetPos(float position);
  * @param direction Lift direction. -1 is down, 1 is up.
  */
 void set(int direction);
-
-/** Adds `inc` onto the lift's kP constant. */
-void kP(float inc);
-
-/** Gets the lift's kP constant. */
-float kP();
 } // end namespace lift
 
 #endif // LIFT_HPP
