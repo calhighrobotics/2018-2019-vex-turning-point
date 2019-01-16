@@ -2,8 +2,8 @@
 #include <API.h>
 
 using namespace speaker;
-/*
-static const char* mario = "Super Mario:d=4,o=5,b=100:16e6,16e6,32p,8e6,16c6,"
+
+/*static const char* mario = "Super Mario:d=4,o=5,b=100:16e6,16e6,32p,8e6,16c6,"
     "8e6,8g6,8p,8g,8p,8c6,16p,8g,16p,8e,16p,8a,8b,16a#,8a,16g.,16e6,16g6,8a6,"
     "16f6,8g6,8e6,16c6,16d6,8b,16p,8c6,16p,8g,16p,8e,16p,8a,8b,16a#,8a,16g.,"
     "16e6,16g6,8a6,16f6,8g6,8e6,16c6,16d6,8b,16p,8p,16g6,16f#6,16f6,16d#6,16p,"
@@ -40,12 +40,12 @@ static const char* ussr = "USSR National Anthem:d=4,o=5,b=250:"
     "2a#6, a.6, 8g6, 2a6, d6, d6, 2g6, f.6, 8d#6, 2f6, a#., 8a#, 2a#6, a.6, 8g6,"
     "1f6, 1d6, c6, a#6, a6, a#6, 2c.6, f6, 2f.6, 1a#6, a6, g6, f6, g6, 2a.6, d6, 2d6";
 static const char* murica = "murica:d=4,o=5,b=100:"
-    "8g.,16e,c,e,g,2c6,8e.6,16d6,c6,e,f#,2g,g, e.6,8d6,c6,2b,8a.,16b,c6,c6,g,e,c";
+    "8g.,16e,c,e,g,2c6,8e.6,16d6,c6,e,f#,2g,g, e.6,8d6,c6,2b,8a.,16b,c6,c6,g,e,c";*/
 
 static const char* g_sharp = "g_sharp:d=4,o=7,b=300:"
     "g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,"
     "g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,g#,";
-*/
+
 void speaker::init()
 {
     speakerInit();
@@ -60,5 +60,5 @@ void speaker::play()
     //speakerPlayRtttl(batman);
     //speakerPlayRtttl(ussr);
     //speakerPlayRtttl(murica);
-    //speakerPlayRtttl(g_sharp);
+    speakerPlayRtttl(g_sharp);
 }

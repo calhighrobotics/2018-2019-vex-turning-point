@@ -13,7 +13,7 @@
 void operatorControl()
 {
     speaker::init();
-    speaker::play();
+    //speaker::play();
     initMotors();
     lcd::init();
     //lift::enablePid();
@@ -22,6 +22,9 @@ void operatorControl()
     unsigned long wakeTime = millis();
     while (true)
     {
+        // earrape button
+        if (joystickGetDigital(1, 7, JOY_DOWN)) speaker::play();
+
         // tank controls
         drive::left(joystick::driveLeft());
         drive::right(joystick::driveRight());
