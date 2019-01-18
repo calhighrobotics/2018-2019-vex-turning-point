@@ -5,7 +5,7 @@
 using namespace motor;
 
 /** Motor power of the intake to set. */
-static constexpr int POWER = 127;
+static constexpr int POWER = -127;
 
 void ballIntake::set(int direction)
 {
