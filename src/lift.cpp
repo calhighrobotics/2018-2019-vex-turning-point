@@ -8,12 +8,16 @@
 #include <algorithm>
 
 /** How many encoder ticks between fully retracted and extended. */
-static constexpr int ticksForExtension = 80;
+static constexpr int ticksForExtension = 90;
+/** Left encoder offset to counteract leaning. */
+static constexpr int leftOffset = 1;
 
 /** Power when fully raising the lift. */
 static constexpr int upPower = 127;
 /** Power when fully lowering the lift. Adjusted for gravity. */
-static constexpr int downPower = -95;
+static constexpr int downPower = -10;
+/** PID power deadzone. */
+static constexpr int liftDeadzone = 2;
 
 static void setLeft(int power)
 {
@@ -47,6 +51,7 @@ static bool stopPid = true;
  */
 static int translatePower(int power)
 {
+    if (abs(power) < liftDeadzone) return 0;
     return std::max(downPower, std::min(power, upPower));
 }
 
@@ -63,7 +68,7 @@ static void pidLoop()
         return;
     }
 
-    leftPos = encoderGet(leftEnc);
+    leftPos = encoderGet(leftEnc) + leftOffset;
     fputs("left: ", stdout);
     setLeft(translatePower(leftPid.update(leftPos, MOTOR_DELAY)));
 
