@@ -20,8 +20,8 @@ enum Port: unsigned char
     LIFT_LEFT = 4,
     /** Ball intake treads. */
     BALL_INTAKE = 5,
-    /** Cap intake pitch motor. */
-    CAP_PITCH = 6,
+    /** Unused motor. */
+    UNUSED = 6,
     /** Right lift motor. */
     LIFT_RIGHT = 7,
     /** Left front drive. */

@@ -48,13 +48,6 @@ int joystick::puncherDebug()
     return buttonControl(puncherForward, puncherBackward);
 }
 
-int joystick::capPitch()
-{
-    bool up = joystickGetDigital(1, 7, JOY_UP);
-    bool down = joystickGetDigital(1, 7, JOY_DOWN);
-    return buttonControl(up, down);
-}
-
 int joystick::lift()
 {
     bool liftUp = joystickGetDigital(1, 5, JOY_UP);
