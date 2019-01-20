@@ -134,7 +134,7 @@ void autonSelect()
 
 void liftPos()
 {
-    lcdPrint(port, 1, "pos: %.1f", lift::getCurrentPos());
+    lcdPrint(port, 1, "pos: %.8f", lift::getCurrentPos());
     lcdSetText(port, 2, "");
 }
 
