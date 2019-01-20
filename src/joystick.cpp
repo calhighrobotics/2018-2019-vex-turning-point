@@ -37,7 +37,8 @@ int joystick::driveRight()
 
 bool joystick::puncher()
 {
-    return joystickGetDigital(1, 7, JOY_UP);
+    //return joystickGetDigital(1, 7, JOY_UP);
+    return false;
 }
 
 int joystick::puncherDebug()
@@ -49,8 +50,8 @@ int joystick::puncherDebug()
 
 int joystick::capPitch()
 {
-    bool up = joystickGetDigital(1, 8, JOY_RIGHT);
-    bool down = joystickGetDigital(1, 8, JOY_LEFT);
+    bool up = joystickGetDigital(1, 7, JOY_UP);
+    bool down = joystickGetDigital(1, 7, JOY_DOWN);
     return buttonControl(up, down);
 }
 
