@@ -4,20 +4,11 @@
 /** Puncher-related functions. */
 namespace puncher
 {
-/** Initializes the limit switch. Should be called in `initializeIO()`. */
-void initLimit();
-
 /**
  * Sets the puncher motor.
- * @param power Motor power.
+ * @param direction Motor direction. 1 for launch, -1 for reverse.
  */
-void set(int power);
-
-/**
- * Launches a ball from a puncher. This function starts a new task so repeated
- * calls won't do anything.
- */
-void launch();
+void set(int direction);
 } // end namespace puncher
 
 #endif // PUNCHER_HPP

@@ -4,13 +4,6 @@
 /** Sensor-related functions. */
 namespace sensor
 {
-/** All allocated analog sensor ports. */
-enum AnalogPort: unsigned char
-{
-    /** Gyroscope. */
-    GYRO = 1
-};
-
 /** All allocated digital sensor ports. */
 enum DigitalPort: unsigned char
 {
@@ -25,9 +18,7 @@ enum DigitalPort: unsigned char
     /** Top wire of the right lift encoder. */
     LIFT_LEFT_TOP = 5,
     /** Bottom wire of the left lift encoder. */
-    LIFT_LEFT_BOTTOM = 6,
-    /** Limit switch to detect puncher rotations. */
-    PUNCHER_LIMIT = 7
+    LIFT_LEFT_BOTTOM = 6
 };
 } // end namespace sensor
 

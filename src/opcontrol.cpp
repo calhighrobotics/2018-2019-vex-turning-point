@@ -5,7 +5,6 @@
 #include "joystick.hpp"
 #include "lcd.hpp"
 #include "lift.hpp"
-#include "pid.hpp"
 #include "puncher.hpp"
 #include "speaker.hpp"
 #include <API.h>
@@ -27,8 +26,7 @@ void operatorControl()
         drive::right(joystick::driveRight());
 
         if (joystick::puncher()) puncher::launch();
-        // TODO: move speed constants to component code
-        puncher::set(127 * joystick::puncherDebug());
+        puncher::set(joystick::puncher());
         capIntake::rotate(joystick::wrist());
         ballIntake::set(joystick::ballIntake());
 

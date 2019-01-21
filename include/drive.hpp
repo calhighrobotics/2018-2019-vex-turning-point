@@ -7,9 +7,6 @@ namespace drive
 /** Initializes the encoders. Should be called in `initialize()`. */
 void initEncoders();
 
-/** Initializes the gyroscope. Should be called in `initialize()`. */
-void initGyro();
-
 /**
  * Powers the left side of the drive train.
  * @param power Motor power.

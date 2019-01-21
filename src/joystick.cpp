@@ -15,8 +15,8 @@ static int buttonControl(bool forward, bool backward)
 /**
  * Applies a deadzone to a joystick analog value.
  * @param analog Joystick value.
- * @return Zero if `analog` is below {@link DEADZONE} in absolute value,
- * otherwise what was given.
+ * @return Zero if the absolute value of `analog` is below the deadzone value,
+ * or what was given if it's greater or equal.
  */
 static int deadzone(int analog)
 {
@@ -35,13 +35,7 @@ int joystick::driveRight()
     return deadzone(joystickGetAnalog(1, 2));
 }
 
-bool joystick::puncher()
-{
-    //return joystickGetDigital(1, 7, JOY_UP);
-    return false;
-}
-
-int joystick::puncherDebug()
+int joystick::puncher()
 {
     bool puncherForward = joystickGetDigital(1, 8, JOY_UP);
     bool puncherBackward = joystickGetDigital(1, 8, JOY_DOWN);

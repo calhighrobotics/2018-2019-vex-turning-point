@@ -8,10 +8,8 @@ namespace joystick
 int driveLeft();
 /** Gets the joystick value for the right drivetrain. */
 int driveRight();
-/** Gets the button value for the puncher. */
-bool puncher();
 /** Gets the button value (-1, 0, 1) for the puncher motor direction. */
-int puncherDebug();
+int puncher();
 /** Gets the button value (-1, 0, 1) for the lift direction. */
 int lift();
 /** Gets the button value (-1, 0, 1) for the cap intake rotation direction. */
