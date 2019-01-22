@@ -25,7 +25,6 @@ void operatorControl()
         drive::left(joystick::driveLeft());
         drive::right(joystick::driveRight());
 
-        if (joystick::puncher()) puncher::launch();
         puncher::set(joystick::puncher());
         capIntake::rotate(joystick::wrist());
         ballIntake::set(joystick::ballIntake());
