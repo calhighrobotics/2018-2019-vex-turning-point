@@ -4,7 +4,7 @@
 using namespace motor;
 
 /** Wrist rotation power. */
-static constexpr int wristPower = 127;
+static constexpr int wristPower = 63;
 
 void capIntake::rotate(int direction)
 {
