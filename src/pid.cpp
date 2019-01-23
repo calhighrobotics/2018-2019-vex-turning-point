@@ -1,55 +1,62 @@
 #include "pid.hpp"
-#include "main.hpp"
-#include <API.h>
+#include <algorithm>
 #include <cmath>
+#include <numeric>
 
-void Velocity::update(int value, int deltaTime)
-{
-    addVel((float) (value - lastValue) / deltaTime);
-    lastValue = value;
-}
-
-float Velocity::getVel() const
-{
-    // calculate rolling average
-    float vel = 0;
-    for (int i = 0; i < maxVelocities; ++i)
-    {
-        vel += velocities[i];
-    }
-    return vel / maxVelocities;
-}
-
-void Velocity::addVel(int vel)
-{
-    // replace oldest value with the newest one
-    velocities[oldest++] = vel;
-    if (oldest >= maxVelocities) oldest = 0;
-}
-
-void PID::init(float kP, float kI, float kD)
+void PID::init(float kP, float kI, float kD, int minOut, int maxOut)
 {
     this->kP = kP;
     this->kI = kI;
     this->kD = kD;
-    targetPos.init();
-}
-
-int PID::update(int value, int deltaTime)
-{
-    velocity.update(value, deltaTime);
-
-    // determine which way we should go and by how much
-    const float p = kP * (targetPos - value);
-
-    // power clamped to the interval [-127, 127]
-    // the tanh smooths the curve
-    int power = round(127 * tanh(p));
-    printf("value: %d, p: %.2f, power: %d\n", value, p, power);
-    return power;
+    this->minOut = minOut;
+    this->maxOut = maxOut;
+    mutex = mutexCreate();
 }
 
 void PID::setTargetPos(int pos)
 {
+    mutexTake(mutex, 0);
+    if (pos != targetPos)
+    {
+        // new target position means previous states have to be reset
+        integral = 0;
+        for (float& deriv : derivs) deriv = 0;
+        lastError = 0;
+    }
     targetPos = pos;
+    mutexGive(mutex);
+}
+
+int PID::update(int value, int deltaTime)
+{
+    const int error = targetPos - value;
+
+    // proportional term
+    const float p = kP * error;
+
+    // integral term
+    integral += kI * error * deltaTime;
+    // clamp integral between minOut/maxOut to prevent windup
+    integral = std::max((float) minOut, std::min(integral, (float) maxOut));
+    const float i = integral;
+
+    // derivative term
+    const float deriv = (float) (error - lastError) / deltaTime;
+    lastError = error;
+    // replace oldest velocity with the newest one
+    derivs[oldestDeriv++] = deriv;
+    if (oldestDeriv >= maxDerivs) oldestDeriv = 0;
+    // calculate rolling average of all the past derivatives
+    const float d = kD *
+        std::accumulate(derivs, &derivs[maxDerivs], 0) / maxDerivs;
+
+    // sum P, I, and D terms, with tanh to smooth the curve
+    float scalar = tanh(p + i + d);
+    // tanh's range is (-1, 1) so scale by minOut/maxOut power accordingly
+    if (scalar > 0) scalar *= abs(maxOut);
+    else if (scalar < 0) scalar *= abs(minOut);
+
+    const int power = round(scalar);
+    printf("value: %d, p: %.2f, power: %d\n", value, p, power);
+    return power;
 }

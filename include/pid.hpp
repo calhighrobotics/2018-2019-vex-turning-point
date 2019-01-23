@@ -1,44 +1,28 @@
 #ifndef PID_HPP
 #define PID_HPP
 
-#include "mutexVar.hpp"
 #include <API.h>
-
-/** Tracks the position and velocity of a side of the lift. */
-class Velocity
-{
-public:
-    /**
-     * Updates position and velocity tracking data.
-     * @param value Encoder value.
-     * @param deltaTime Time in milliseconds between last update.
-     */
-    void update(int value, int deltaTime);
-
-    /** Gets the velocity in ticks per millisecond. */
-    float getVel() const;
-
-private:
-    /** Maximum number of velocities to keep track of. */
-    static constexpr int maxVelocities = 10;
-
-    /** Adds another velocity value to the rolling average. */
-    void addVel(int vel);
-
-    /** Tracks the last `maxVelocities` to calculate the rolling average. */
-    float velocities[maxVelocities] = {0};
-    /** Position of the oldest velocity value in the queue. */
-    int oldest = 0;
-    /** Value of the last position. Used in differentiation. */
-    int lastValue = 0;
-};
 
 /** PID position controller. */
 class PID
 {
 public:
-    /** Initializes the targetPos mutex var. */
-    void init(float kP, float kI, float kD);
+    /**
+     * Initializes the targetPos mutex var.
+     * @param kP Proportional term coefficient.
+     * @param kI Integral term coefficient.
+     * @param kD Derivative term coefficient.
+     * @param minOut Minimum output value.
+     * @param maxOut Maximum output value.
+     */
+    void init(float kP, float kI, float kD, int minOut = -127,
+        int maxOut = 127);
+
+    /**
+     * Sets the target position of the PID in encoder ticks. Protected by a
+     * mutex.
+     */
+    void setTargetPos(int pos);
 
     /**
      * Updates the PID.
@@ -48,24 +32,35 @@ public:
      */
     int update(int value, int deltaTime);
 
-    /**
-     * Sets the target position of the PID in encoder ticks. Protected by a
-     * mutex.
-     */
-    void setTargetPos(int pos);
-
 private:
+    /** Minimum output value. */
+    int minOut = 0;
+    /** Maximum output value. */
+    int maxOut = 0;
+
+    /** Target position. */
+    int targetPos = 0;
+    /** Protects fields from concurrent modification from an outside thread. */
+    Mutex mutex = nullptr;
+
     /** Proportional term coefficient. */
     float kP = 0;
+
     /** Integral term coefficient. */
     float kI = 0;
+    /** Accumulates the integral of the error in tick-milliseconds. */
+    float integral = 0;
+
     /** Derivative term coefficient. */
     float kD = 0;
-
-    /** Velocity tracker. Used in derivative term. */
-    Velocity velocity;
-    /** Target position. */
-    MutexVar<int> targetPos = 0;
+    /** Maximum number of error derivatives to keep track of. */
+    static constexpr int maxDerivs = 10;
+    /** Tracks the last `maxDerivs` derivatives in ticks per millisecond. */
+    float derivs[maxDerivs] = {0};
+    /** Position of the oldest velocity value in the queue. */
+    int oldestDeriv = 0;
+    /** Previous error value. Used in differentiation. */
+    int lastError = 0;
 };
 
 #endif // PID_HPP
