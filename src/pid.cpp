@@ -35,10 +35,10 @@ int PID::update(int value, int deltaTime)
     const float p = kP * error;
 
     // integral term
-    integral += kI * error * deltaTime;
+    integral += error * deltaTime;
     // clamp integral between minOut/maxOut to prevent windup
     integral = std::max((float) minOut, std::min(integral, (float) maxOut));
-    const float i = integral;
+    const float i = kI * integral;
 
     // derivative term
     const float deriv = (float) (error - lastError) / deltaTime;
