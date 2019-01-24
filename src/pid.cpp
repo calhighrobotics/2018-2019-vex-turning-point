@@ -51,12 +51,8 @@ int PID::update(int value, int deltaTime)
         std::accumulate(derivs, &derivs[maxDerivs], 0) / maxDerivs;
 
     // sum P, I, and D terms, with tanh to smooth the curve
-    float scalar = tanh(p + i + d);
-    // tanh's range is (-1, 1) so scale by minOut/maxOut power accordingly
-    if (scalar > 0) scalar *= abs(maxOut);
-    else if (scalar < 0) scalar *= abs(minOut);
-
-    const int power = round(scalar);
+    const int pid = p + i + d;
+    const int power = std::max(minOut, std::min(pid, maxOut));
     printf("value: %d, p: %.2f, power: %d\n", value, p, power);
     return power;
 }
