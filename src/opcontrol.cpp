@@ -33,7 +33,7 @@ void operatorControl()
         {
             // set the lift target position (liftIncrement*100)% above/below the
             //  current position
-            static constexpr float liftIncrement = 0.1;
+            static constexpr float liftIncrement = 0.2;
             int l = joystick::lift();
             // target pos should stay if the lift buttons aren't pressed,
             //  meaning it should hold its position
