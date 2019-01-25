@@ -87,13 +87,13 @@ void lift::enablePid()
     leftEnc = encoderInit(LIFT_LEFT_TOP, LIFT_LEFT_BOTTOM, /*reverse*/ true);
     encoderReset(leftEnc);
     leftPos.init();
-    leftPid.init(4.f / 31, 0, 0.1f, downPower, upPower);
+    leftPid.init(2.5f, 0.01f, 1, downPower, upPower);
 
     rightEnc = encoderInit(LIFT_RIGHT_TOP, LIFT_RIGHT_BOTTOM,
         /*reverse*/ false);
     encoderReset(rightEnc);
     rightPos.init();
-    rightPid.init(4.f / 31, 0, 0.1f, downPower, upPower);
+    rightPid.init(2.5f, 0.01f, 1, downPower, upPower);
 
     taskRunLoop(pidLoop, MOTOR_DELAY);
 }
