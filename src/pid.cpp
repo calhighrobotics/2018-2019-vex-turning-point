@@ -29,6 +29,8 @@ void PID::setTargetPos(int pos)
 
 int PID::update(int value, int deltaTime)
 {
+    mutexTake(mutex, 0);
+
     const int error = targetPos - value;
 
     // proportional term
@@ -53,6 +55,8 @@ int PID::update(int value, int deltaTime)
     // sum P, I, and D terms, with tanh to smooth the curve
     const int pid = p + i + d;
     const int power = std::max(minOut, std::min(pid, maxOut));
-    printf("value: %d, p: %.2f, power: %d\n", value, p, power);
+    printf("enc=%d target=%d p=%.2f i=%2.f d=%.2f power=%d\n", value, targetPos,
+        p, i, d, power);
+    mutexGive(mutex);
     return power;
 }
