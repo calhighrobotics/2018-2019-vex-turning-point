@@ -69,11 +69,11 @@ static void pidLoop()
     }
 
     leftPos = encoderGet(leftEnc) + leftOffset;
-    fputs("left: ", stdout);
+    print("left: ");
     setLeft(translatePower(leftPid.update(leftPos, MOTOR_DELAY)));
 
     rightPos = encoderGet(rightEnc);
-    fputs("right: ", stdout);
+    print("right: ");
     setRight(translatePower(rightPid.update(rightPos, MOTOR_DELAY)));
 }
 
@@ -119,7 +119,7 @@ void lift::setTargetPos(float position)
     position = std::max(0.f, std::min(position, 1.f));
     // convert position to encoder ticks
     int target = ticksForExtension * position;
-    printf("target pos: %.2f, target enc: %d\n", position, target);
+    printf("lift target pos: %.2f, target enc: %d\n", position, target);
     leftPid.setTargetPos(target);
     rightPid.setTargetPos(target);
 }
