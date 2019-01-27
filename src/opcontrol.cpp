@@ -31,16 +31,16 @@ void operatorControl()
 
         if (lift::isPidEnabled())
         {
-            // set the lift target position (liftIncrement*100)% above/below the
-            //  current position
-            static constexpr float liftIncrement = 0.2;
-            int l = joystick::lift();
-            // target pos should stay if the lift buttons aren't pressed,
-            //  meaning it should hold its position
-            if (l)
+            static int liftButton = 0;
+            static int lastLiftButton;
+            lastLiftButton = liftButton;
+            liftButton = joystick::lift();
+            if (liftButton > 0) lift::setTargetPos(1);
+            else if (liftButton < 0) lift::setTargetPos(0);
+            else if (lastLiftButton)
             {
-                lift::setTargetPos(lift::getCurrentPos() +
-                    (l > 0 ? liftIncrement : l < 0 ? -liftIncrement : 0));
+                // just released lift button so hold current pos
+                lift::setTargetPos(lift::getCurrentPos());
             }
         }
         else lift::set(joystick::lift());
