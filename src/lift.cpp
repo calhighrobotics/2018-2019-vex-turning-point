@@ -10,8 +10,6 @@
 
 /** How many encoder ticks between fully retracted and extended. */
 static constexpr int ticksForExtension = 90;
-/** Left encoder offset to counteract leaning. */
-static constexpr int leftOffset = -1;
 
 /** Power when fully raising the lift. */
 static constexpr int upPower = 127;
@@ -79,7 +77,7 @@ static void pidLoop()
         return;
     }
 
-    leftPos = encoderGet(leftEnc) + leftOffset;
+    leftPos = encoderGet(leftEnc);
     print("left: ");
     setLeft(translatePower(leftPid.update(leftPos, MOTOR_DELAY)));
 
