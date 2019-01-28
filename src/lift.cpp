@@ -17,7 +17,7 @@ static constexpr int upPower = 127;
 static constexpr int downPower = -10;
 /** PID power deadzone. */
 static constexpr int liftDeadzone = 2;
-/** Position deadzone when lowered. */
+/** Position deadzone when lowered (0-1). */
 static constexpr float posDeadzone = 0.01;
 
 static void setLeft(int power)
@@ -125,7 +125,8 @@ float lift::getCurrentPos()
 
 float lift::getTargetPos()
 {
-    return (leftPid.getTargetPos() + rightPid.getTargetPos()) / 2;
+    return (leftPid.getTargetPos() + rightPid.getTargetPos()) /
+        (2.f * ticksForExtension);
 }
 
 void lift::setTargetPos(float position)
