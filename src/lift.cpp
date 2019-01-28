@@ -6,6 +6,7 @@
 #include "sensor.hpp"
 #include <API.h>
 #include <algorithm>
+#include <cmath>
 
 /** How many encoder ticks between fully retracted and extended. */
 static constexpr int ticksForExtension = 90;
@@ -18,6 +19,8 @@ static constexpr int upPower = 127;
 static constexpr int downPower = -10;
 /** PID power deadzone. */
 static constexpr int liftDeadzone = 2;
+/** Position deadzone when lowered. */
+static constexpr float posDeadzone = 0.01;
 
 static void setLeft(int power)
 {
@@ -68,6 +71,14 @@ static void pidLoop()
         return;
     }
 
+    if (lift::getTargetPos() < posDeadzone &&
+        fabs(lift::getCurrentPos()) < posDeadzone)
+    {
+        setLeft(0);
+        setRight(0);
+        return;
+    }
+
     leftPos = encoderGet(leftEnc) + leftOffset;
     print("left: ");
     setLeft(translatePower(leftPid.update(leftPos, MOTOR_DELAY)));
@@ -112,6 +123,11 @@ float lift::getCurrentPos()
 {
     // average the two sides and convert to 0-1 scalar
     return (leftPos + rightPos) / (2.f * ticksForExtension);
+}
+
+float lift::getTargetPos()
+{
+    return (leftPid.getTargetPos() + rightPid.getTargetPos()) / 2;
 }
 
 void lift::setTargetPos(float position)

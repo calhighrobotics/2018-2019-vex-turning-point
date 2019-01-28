@@ -20,6 +20,12 @@ void disablePid();
 float getCurrentPos();
 
 /**
+ * Gets the target lift position.
+ * @returns A value from 0 to 1 specifying extension of the lift.
+ */
+float getTargetPos();
+
+/**
  * Sets target lift position.
  * @param position A value from 0 to 1 specifying extension of the lift.
  */

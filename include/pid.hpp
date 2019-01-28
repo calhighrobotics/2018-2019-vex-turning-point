@@ -18,6 +18,9 @@ public:
     void init(float kP, float kI, float kD, int minOut = -127,
         int maxOut = 127);
 
+    /** Gets the current target position. Protected by a mutex. */
+    float getTargetPos() const;
+
     /**
      * Sets the target position of the PID in encoder ticks. Protected by a
      * mutex.

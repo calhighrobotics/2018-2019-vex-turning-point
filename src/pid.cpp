@@ -25,6 +25,14 @@ void PID::init(float kP, float kI, float kD, int minOut, int maxOut)
     else mutex = mutexCreate();
 }
 
+float PID::getTargetPos() const
+{
+    mutexTake(mutex, 0);
+    const float result = targetPos;
+    mutexGive(mutex);
+    return result;
+}
+
 void PID::setTargetPos(int pos)
 {
     mutexTake(mutex, 0);
