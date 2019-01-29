@@ -8,9 +8,9 @@ namespace sensor
 enum DigitalPort: unsigned char
 {
     /** Top wire of the left drive train encoder. */
-    DT_RIGHT_TOP = 1,
+    DT_LEFT_TOP = 1,
     /** Bottom wire of the left drive train encoder. */
-    DT_RIGHT_BOTTOM = 2,
+    DT_LEFT_BOTTOM = 2,
     /** Top wire of the right lift encoder. */
     LIFT_RIGHT_TOP = 3,
     /** Bottom wire of the right lift encoder. */

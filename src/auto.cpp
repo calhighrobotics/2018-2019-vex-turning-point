@@ -1,10 +1,10 @@
 #include "auto.hpp"
+#include "capIntake.hpp"
 #include "drive.hpp"
 #include "main.hpp"
 #include "lcd.hpp"
 #include "lift.hpp"
 #include "puncher.hpp"
-#include <API.h>
 
 using namespace auton;
 
@@ -26,36 +26,27 @@ void auton::setAuton(Auton value)
     autonState = value;
 }
 
-/**
- * Drives the robot forward.
- * @param power Motor power.
- * @param ms Time delay in ms.
- */
-static void driveForward(int power, unsigned long ms)
+/** Pauses the current task until the given one has completed. */
+static void await(TaskHandle task)
 {
-    drive::left(power);
-    drive::right(power);
-    delay(ms);
-    drive::left(0);
-    drive::right(0);
-}
-
-/** Launches the ball. */
-static void launchBall()
-{
-    puncher::set(127);
-    delay(3600);
-    puncher::set(0);
+    while (taskGetState(task) != TASK_DEAD) delay(MOTOR_DELAY);
 }
 
 /** Drive forward and launch the ball. */
 static void driveLaunch()
 {
-    // drive up to flag
-    driveForward(127, 300);
+    // unhinge cap intake from the puncher
+    const TaskHandle deploy = capIntake::deploy();
 
-    // launch ball to flag
-    launchBall();
+    // drive up to toggle bottom flag
+    drive::straightSync(750, /*decelerate*/ false);
+
+    // back up within range of higher flags
+    drive::straight(-150);
+
+    // launch ball to flag after cap intake is deployed
+    await(deploy);
+    puncher::punchSync();
 }
 
 // declared in main.hpp
@@ -63,12 +54,14 @@ void autonomous()
 {
     initMotors();
     lcd::init();
+    drive::initEncoders();
     lift::enablePid();
 
     switch (autonState)
     {
         case NOTHING:
-            // nothing!
+            // nothing except setup the cap intake
+            capIntake::deploySync();
             break;
         case DRIVE_LAUNCH:
             driveLaunch();
