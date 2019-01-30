@@ -9,7 +9,7 @@
 #include <cmath>
 
 /** How many encoder ticks between fully retracted and extended. */
-static constexpr int ticksForExtension = 90;
+static constexpr int ticksForExtension = 100;
 
 /** Power when fully raising the lift. */
 static constexpr int upPower = 127;
@@ -19,6 +19,8 @@ static constexpr int downPower = -10;
 static constexpr int liftDeadzone = 2;
 /** Position deadzone when lowered (0-1). */
 static constexpr float posDeadzone = 0.01;
+/** Power offset when holding the lift up. */
+static constexpr int powerOffset = 20;
 
 static void setLeft(int power)
 {
@@ -53,6 +55,7 @@ static bool stopPid = true;
 static int translatePower(int power)
 {
     if (abs(power) < liftDeadzone) return 0;
+    if (power > 0) power += powerOffset;
     return std::max(downPower, std::min(power, upPower));
 }
 
