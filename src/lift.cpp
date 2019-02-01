@@ -72,8 +72,7 @@ static void pidLoop()
         return;
     }
 
-    if (lift::getTargetPos() < posDeadzone &&
-        fabs(lift::getCurrentPos()) < posDeadzone)
+    if (lift::getTargetPos() < posDeadzone && lift::isDown())
     {
         setLeft(0);
         setRight(0);
@@ -124,6 +123,11 @@ float lift::getCurrentPos()
 {
     // average the two sides and convert to 0-1 scalar
     return (leftPos + rightPos) / (2.f * ticksForExtension);
+}
+
+bool lift::isDown()
+{
+    return getCurrentPos() < posDeadzone;
 }
 
 float lift::getTargetPos()

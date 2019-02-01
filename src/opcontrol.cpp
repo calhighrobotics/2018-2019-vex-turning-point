@@ -31,6 +31,9 @@ void operatorControl()
 
         if (lift::isPidEnabled())
         {
+            static constexpr float liftUpSag = 0.1;
+            static constexpr float liftDownSag = 0.05;
+
             static int liftButton = 0;
             static int lastLiftButton;
             lastLiftButton = liftButton;
@@ -40,7 +43,12 @@ void operatorControl()
             else if (lastLiftButton)
             {
                 // just released lift button so hold current pos
-                lift::setTargetPos(lift::getCurrentPos());
+                if (lift::isDown()) lift::setTargetPos(0);
+                else if (lift::getCurrentPos() < lift::getTargetPos())
+                {
+                    lift::setTargetPos(lift::getCurrentPos() + liftUpSag);
+                }
+                else lift::setTargetPos(lift::getCurrentPos() - liftDownSag);
             }
         }
         else lift::set(joystick::lift());

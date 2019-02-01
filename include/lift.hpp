@@ -19,6 +19,9 @@ void disablePid();
  */
 float getCurrentPos();
 
+/** Checks whether the lift is down. */
+bool isDown();
+
 /**
  * Gets the target lift position.
  * @returns A value from 0 to 1 specifying extension of the lift.
