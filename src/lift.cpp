@@ -18,7 +18,7 @@ static constexpr int downPower = -10;
 /** PID power deadzone. */
 static constexpr int liftDeadzone = 2;
 /** Position deadzone when lowered (0-1). */
-static constexpr float posDeadzone = 0.01;
+static constexpr float posDeadzone = 0.05;
 /** Power offset when holding the lift up. */
 static constexpr int powerOffset = 20;
 
