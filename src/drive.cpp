@@ -38,6 +38,12 @@ void drive::right(int power)
     set(DRIVE_RB, -power);
 }
 
+void drive::stop()
+{
+    left(0);
+    right(0);
+}
+
 /** Parameters for the `drive::straight` functions. */
 struct StraightTaskArgs
 {
@@ -96,8 +102,7 @@ void drive::straightSync(int distance, bool decelerate, int tolerance)
         }
 
         // stop driving once target is reached
-        left(0);
-        right(0);
+        stop();
     }
     else
     {
@@ -105,9 +110,11 @@ void drive::straightSync(int distance, bool decelerate, int tolerance)
         left(power);
         right(power);
 
+        int ticks;
         encoderReset(leftEnc);
-        while (abs(target - encoderGet(leftEnc)) > tolerance)
+        while (abs(target - (ticks = encoderGet(leftEnc))) > tolerance)
         {
+            printf("straight no pid: target=%d, enc=%d,", target, ticks);
             delay(MOTOR_DELAY);
         }
     }
@@ -186,8 +193,7 @@ void drive::turnSync(int angle, int radius, int outer, int tolerance)
         }
 
         // stop driving once target is reached
-        left(0);
-        right(0);
+        stop();
     }
     else
     {

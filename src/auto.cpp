@@ -10,11 +10,11 @@ using namespace auton;
 
 const char* auton::autonNames[NUM_AUTONS][2]
 {
-    {"Nothing", ""}, {"Drive and Launch", ""}
+    {"Nothing", ""}, {"Drive and Launch", ""}, {"Test Auton", ""}
 };
 
 /** Current auton program. */
-static Auton autonState = DRIVE_LAUNCH;
+static Auton autonState = TEST_AUTON;
 
 Auton auton::getAuton()
 {
@@ -44,9 +44,16 @@ static void driveLaunch()
     // back up within range of higher flags
     drive::straight(-150);
 
-    // launch ball to flag after cap intake is deployed
+    // launch the ball to the flag after the cap intake is deployed
     await(deploy);
     puncher::punchSync();
+}
+
+/** Test Auton for debugging purposes. */
+static void testAuton()
+{
+    drive::straightSync(150, false);
+    drive::stop();
 }
 
 // declared in main.hpp
@@ -65,6 +72,9 @@ void autonomous()
             break;
         case DRIVE_LAUNCH:
             driveLaunch();
+            break;
+        case TEST_AUTON:
+            testAuton();
             break;
         default:;
     }

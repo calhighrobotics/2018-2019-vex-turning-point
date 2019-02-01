@@ -7,7 +7,7 @@ namespace auton
 /** Autonomous programs. */
 enum Auton
 {
-    NOTHING, DRIVE_LAUNCH, NUM_AUTONS
+    NOTHING, DRIVE_LAUNCH, TEST_AUTON, NUM_AUTONS
 };
 
 /** Autonomous program names. The sublists correspond to each LCD line. */
