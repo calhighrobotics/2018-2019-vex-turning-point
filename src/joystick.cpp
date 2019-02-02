@@ -62,3 +62,13 @@ int joystick::ballIntake()
     bool intakeBackward = joystickGetDigital(1, 6, JOY_DOWN);
     return buttonControl(intakeForward, intakeBackward);
 }
+
+bool joystick::testAuton()
+{
+    // button must be just pressed
+    static bool current = false;
+    static bool last;
+    last = current;
+    current = joystickGetDigital(1, 7, JOY_DOWN);
+    return current && !last;
+}

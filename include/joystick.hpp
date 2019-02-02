@@ -16,6 +16,8 @@ int lift();
 int wrist();
 /** Gets the button value (-1, 0, 1) for the ball intake. */
 int ballIntake();
+/** Gets the button value for testing the autonomous program. */
+bool testAuton();
 } // end namespace joystick
 
 #endif // JOYSTICK_HPP

@@ -59,6 +59,8 @@ void operatorControl()
         }
         else lift::set(joystick::lift());
 
+        if (joystick::testAuton()) autonomous();
+
         // wait for the motors to update before receiving input again
         taskDelayUntil(&wakeTime, MOTOR_DELAY);
     }
