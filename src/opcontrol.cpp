@@ -31,8 +31,10 @@ void operatorControl()
 
         if (lift::isPidEnabled())
         {
-            static constexpr float liftUpSag = 0.1;
-            static constexpr float liftDownSag = 0.05;
+            // position offset when going up to offset proportion term
+            static constexpr float liftUpOffset = 0.1;
+            // position offset when going down to offset gravity+momentum
+            static constexpr float liftDownOffset = 0.05;
 
             static int liftButton = 0;
             static int lastLiftButton;
@@ -46,9 +48,13 @@ void operatorControl()
                 if (lift::isDown()) lift::setTargetPos(0);
                 else if (lift::getCurrentPos() < lift::getTargetPos())
                 {
-                    lift::setTargetPos(lift::getCurrentPos() + liftUpSag);
+                    // set target higher than normal so the proportional term
+                    //  catches up faster
+                    lift::setTargetPos(lift::getCurrentPos() + liftUpOffset);
                 }
-                else lift::setTargetPos(lift::getCurrentPos() - liftDownSag);
+                // set target lower than normal so the pid decelerates to a stop
+                //  better
+                else lift::setTargetPos(lift::getCurrentPos() - liftDownOffset);
             }
         }
         else lift::set(joystick::lift());
