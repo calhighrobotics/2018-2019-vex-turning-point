@@ -37,8 +37,8 @@ int joystick::driveRight()
 
 int joystick::puncher()
 {
-    bool puncherForward = joystickGetDigital(1, 8, JOY_DOWN);
-    bool puncherBackward = joystickGetDigital(1, 8, JOY_UP);
+    bool puncherForward = joystickGetDigital(1, 8, JOY_UP);
+    bool puncherBackward = joystickGetDigital(1, 8, JOY_DOWN);
     return buttonControl(puncherForward, puncherBackward);
 }
 

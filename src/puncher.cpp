@@ -2,7 +2,7 @@
 #include "motor.hpp"
 
 /** Power to set the puncher at when launching. */
-static constexpr int launchPower = -127;
+static constexpr int launchPower = 127;
 
 void puncher::set(int direction)
 {
@@ -24,7 +24,7 @@ TaskHandle puncher::punch()
 
 void puncher::punchSync()
 {
-    puncher::set(127);
+    puncher::set(1);
     delay(3600);
     puncher::set(0);
 }
