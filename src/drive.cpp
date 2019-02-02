@@ -77,9 +77,6 @@ TaskHandle drive::straight(int distance, bool decelerate, int tolerance)
 
 void drive::straightSync(int distance, bool decelerate, int tolerance)
 {
-    // must have non-negligible distance to cover
-    if (abs(distance) <= tolerance) return;
-
     // calculate number of encoder ticks needed
     const int target = distance * 180 * PI_RECIPROCAL / wheelRadius;
 
