@@ -9,6 +9,9 @@ namespace drive
 /** Initializes the encoders. Should be called in `initialize()`. */
 void initEncoders();
 
+/** Disables the encoders. */
+void deinitEncoders();
+
 /**
  * Powers the left side of the drive train.
  * @param power Motor power.

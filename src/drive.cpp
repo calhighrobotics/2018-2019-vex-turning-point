@@ -26,6 +26,12 @@ void drive::initEncoders()
     leftEnc = encoderInit(DT_LEFT_TOP, DT_LEFT_BOTTOM, /*reverse=*/ false);
 }
 
+void drive::deinitEncoders()
+{
+    encoderShutdown(leftEnc);
+    leftEnc = nullptr;
+}
+
 void drive::left(int power)
 {
     set(DRIVE_LF, power);

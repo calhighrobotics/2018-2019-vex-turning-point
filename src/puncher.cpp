@@ -25,6 +25,6 @@ TaskHandle puncher::punch()
 void puncher::punchSync()
 {
     puncher::set(1);
-    delay(3600);
+    delay(4000);
     puncher::set(0);
 }

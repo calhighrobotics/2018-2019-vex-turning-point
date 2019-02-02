@@ -26,6 +26,6 @@ TaskHandle capIntake::deploy()
 void capIntake::deploySync()
 {
     puncher::set(-1);
-    delay(800);
+    delay(400);
     puncher::set(0);
 }

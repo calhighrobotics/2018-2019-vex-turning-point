@@ -1,4 +1,5 @@
 #include "auto.hpp"
+#include "ballIntake.hpp"
 #include "capIntake.hpp"
 #include "drive.hpp"
 #include "main.hpp"
@@ -10,11 +11,11 @@ using namespace auton;
 
 const char* auton::autonNames[NUM_AUTONS][2]
 {
-    {"Nothing", ""}, {"Drive and Launch", ""}, {"Test Auton", ""}
+    {"Nothing", ""}, {"Drive and Launch", ""}
 };
 
 /** Current auton program. */
-static Auton autonState = TEST_AUTON;
+static Auton autonState = DRIVE_LAUNCH;
 
 Auton auton::getAuton()
 {
@@ -39,21 +40,16 @@ static void driveLaunch()
     const TaskHandle deploy = capIntake::deploy();
 
     // drive up to toggle bottom flag
-    drive::straightSync(750, /*decelerate*/ false);
-
+    drive::straightSync(400, /*decelerate*/ false);
     // back up within range of higher flags
-    drive::straight(-150);
+    drive::straight(-100);
+
+    // put the ball in the puncher
+    ballIntake::load();
 
     // launch the ball to the flag after the cap intake is deployed
     await(deploy);
     puncher::punchSync();
-}
-
-/** Test Auton for debugging purposes. */
-static void testAuton()
-{
-    drive::straightSync(150, false);
-    drive::stop();
 }
 
 // declared in main.hpp
@@ -73,9 +69,8 @@ void autonomous()
         case DRIVE_LAUNCH:
             driveLaunch();
             break;
-        case TEST_AUTON:
-            testAuton();
-            break;
         default:;
     }
+
+    drive::deinitEncoders();
 }
