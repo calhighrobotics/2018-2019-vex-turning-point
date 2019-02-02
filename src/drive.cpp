@@ -185,7 +185,7 @@ void drive::turnSync(int angle, int radius, int outer, int tolerance)
         while (abs(ticks = encoderGet(leftEnc)) < abs(target) - tolerance)
         {
             print("turn pid: ");
-            const int leftPower = pid.update(ticks, MOTOR_DELAY);
+            int leftPower = pid.update(ticks, MOTOR_DELAY);
             int rightPower = leftPower;
             if (angle > 0) rightPower *= innerRatio;
             else leftPower *= innerRatio;

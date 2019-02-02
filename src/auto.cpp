@@ -21,7 +21,7 @@ enum Color
 const char* auton::autonNames[NUM_AUTONS][2]
 {
     {"Nothing", ""}, {"Test Program", ""}, {"Flags Close", ""},
-    {"Flags Park Close", "Red"}, {"Flags Park Close", "Blue"}
+    {"Flags Park Close", "Red"}, {"Flags Park Close", "Blue"}, {"Flags Far", ""}
 };
 
 /** Current auton program. */
@@ -89,6 +89,20 @@ static void flagsParkClose(Color color)
     drive::straightSync(350, 127);
 }
 
+/** Launch the preload from the far side. */
+static void flagsFar()
+{
+    // start in back tile facing forward
+    const auto deploy = capIntake::deploy();
+
+    // drive down to be in range of the high flag
+    drive::straight(-150);
+
+    // launch preload from afar
+    await(deploy);
+    puncher::punchSync();
+}
+
 // declared in main.hpp
 void autonomous()
 {
@@ -114,6 +128,9 @@ void autonomous()
             break;
         case FLAGS_PARK_CLOSE_BLUE:
             flagsParkClose(BLUE);
+            break;
+        case FLAGS_FAR:
+            flagsFar();
             break;
         default:;
     }

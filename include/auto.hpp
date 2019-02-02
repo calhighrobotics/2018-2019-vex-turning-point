@@ -8,7 +8,7 @@ namespace auton
 enum Auton
 {
     NOTHING, TEST, FLAGS_CLOSE, FLAGS_PARK_CLOSE_RED, FLAGS_PARK_CLOSE_BLUE,
-    NUM_AUTONS
+    FLAGS_FAR, NUM_AUTONS
 };
 
 /** Autonomous program names. The sublists correspond to each LCD line. */
