@@ -9,13 +9,23 @@
 
 using namespace auton;
 
+/** Alliance color type. */
+enum Color
+{
+    /** Red, left side. */
+    RED, LEFT = RED,
+    /** Blue, right side. */
+    BLUE, RIGHT = BLUE
+};
+
 const char* auton::autonNames[NUM_AUTONS][2]
 {
-    {"Nothing", ""}, {"Drive and Launch", ""}
+    {"Nothing", ""}, {"Flags Close", ""}, {"Flags Park Close", "Red"},
+    {"Flags Park Close", "Blue"}
 };
 
 /** Current auton program. */
-static Auton autonState = DRIVE_LAUNCH;
+static Auton autonState = FLAGS_CLOSE;
 
 Auton auton::getAuton()
 {
@@ -33,8 +43,8 @@ static void await(TaskHandle task)
     while (taskGetState(task) != TASK_DEAD) delay(MOTOR_DELAY);
 }
 
-/** Drive forward and launch the ball. */
-static void driveLaunch()
+/** Target flags from the front tile. */
+static void flagsClose()
 {
     // unhinge cap intake from the puncher
     const TaskHandle deploy = capIntake::deploy();
@@ -52,6 +62,24 @@ static void driveLaunch()
     puncher::punchSync();
 }
 
+/** Target flags from front tile then drive onto the platform. */
+static void flagsParkClose(Color color)
+{
+    flagsClose();
+    // from previous tests, the robot will have its back wheels touching the
+    //  starting tile by now
+
+    // drive so we're inline with the platforms
+    drive::straightSync(-400, /*decelerate*/ false);
+
+    // aim at the platforms
+    if (color == LEFT) drive::turnSync(90, 0, 127);
+    else drive::turnSync(-90, 0, 127);
+
+    // drive straight into it
+    drive::straightSync(400);
+}
+
 // declared in main.hpp
 void autonomous()
 {
@@ -66,8 +94,14 @@ void autonomous()
             // nothing except setup the cap intake
             capIntake::deploySync();
             break;
-        case DRIVE_LAUNCH:
-            driveLaunch();
+        case FLAGS_CLOSE:
+            flagsClose();
+            break;
+        case FLAGS_PARK_CLOSE_RED:
+            flagsParkClose(RED);
+            break;
+        case FLAGS_PARK_CLOSE_BLUE:
+            flagsParkClose(BLUE);
             break;
         default:;
     }
