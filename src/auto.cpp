@@ -21,7 +21,8 @@ enum Color
 const char* auton::autonNames[NUM_AUTONS][2]
 {
     {"Nothing", ""}, {"Test Program", ""}, {"Flags Close", ""},
-    {"Flags Park Close", "Red"}, {"Flags Park Close", "Blue"}, {"Flags Far", ""}
+    {"Flags Park Close", "Red"}, {"Flags Park Close", "Blue"},
+    {"Flags Far", ""}, {"Caps Far", "Red"}, {"Caps Far", "Blue"}
 };
 
 /** Current auton program. */
@@ -103,6 +104,36 @@ static void flagsFar()
     puncher::punchSync();
 }
 
+static void capsFar(Color color)
+{
+    capIntake::deploy();
+
+    // arc into the direction of the cap
+    if (color == LEFT) drive::turnSync(-90, -botRadius - 80, 127);
+    else drive::turnSync(90, -botRadius - 80, 127);
+    drive::straightSync(-175, 127);
+
+    // lift it up
+    lift::setTargetPos(0.7);
+    // arc into the direction of the short pole
+    drive::straightSync(150, 31);
+    if (color == LEFT) drive::turnSync(90, botRadius + 16, 31);
+    else drive::turnSync(-90, botRadius + 16, 31);
+    // drive into it
+    drive::straightSync(-75, 31);
+
+    // put the cap on the pole
+    lift::setTargetPos(0.6);
+    // for now wait a bit for the lift to go down
+    delay(500);
+    // back up so the cap stays on the pole
+    drive::straight(150);
+    // in a bit start to lower the lift
+    delay(500);
+    lift::setTargetPos(0);
+    // should end one tile away from the short pole
+}
+
 // declared in main.hpp
 void autonomous()
 {
@@ -131,6 +162,12 @@ void autonomous()
             break;
         case FLAGS_FAR:
             flagsFar();
+            break;
+        case CAPS_FAR_RED:
+            capsFar(RED);
+            break;
+        case CAPS_FAR_BLUE:
+            capsFar(BLUE);
             break;
         default:;
     }
