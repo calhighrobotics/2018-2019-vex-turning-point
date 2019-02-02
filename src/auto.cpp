@@ -46,11 +46,14 @@ static void await(TaskHandle task)
 /** Target flags from the front tile. */
 static void flagsClose()
 {
+    // start in the top corner of the front tile so ball has the best chance of
+    //  hitting
+
     // unhinge cap intake from the puncher
     const TaskHandle deploy = capIntake::deploy();
 
     // drive up to toggle bottom flag
-    drive::straightSync(400, /*decelerate*/ false);
+    drive::straightSync(400, 127);
     // back up within range of higher flags
     drive::straight(-100);
 
@@ -70,14 +73,14 @@ static void flagsParkClose(Color color)
     //  starting tile by now
 
     // drive so we're inline with the platforms
-    drive::straightSync(-400, /*decelerate*/ false);
+    drive::straightSync(-400, 127);
 
     // aim at the platforms
     if (color == LEFT) drive::turnSync(90, 0, 127);
     else drive::turnSync(-90, 0, 127);
 
     // drive straight into it
-    drive::straightSync(400);
+    drive::straightSync(400, 127);
 }
 
 // declared in main.hpp

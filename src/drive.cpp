@@ -54,7 +54,7 @@ void drive::stop()
 struct StraightTaskArgs
 {
     int distance;
-    bool decelerate;
+    int power;
     int tolerance;
 };
 
@@ -65,28 +65,28 @@ struct StraightTaskArgs
 static void straightTask(void* params)
 {
     auto* args = static_cast<StraightTaskArgs*>(params);
-    drive::straightSync(args->distance, args->decelerate, args->tolerance);
+    drive::straightSync(args->distance, args->power, args->tolerance);
     free(args);
 }
 
-TaskHandle drive::straight(int distance, bool decelerate, int tolerance)
+TaskHandle drive::straight(int distance, int power, int tolerance)
 {
     auto* params = static_cast<StraightTaskArgs*>(malloc(
             sizeof(StraightTaskArgs)));
     params->distance = distance;
-    params->decelerate = decelerate;
+    params->power = power;
     params->tolerance = tolerance;
 
     return taskCreate(straightTask, TASK_DEFAULT_STACK_SIZE, params,
         TASK_PRIORITY_DEFAULT - 1);
 }
 
-void drive::straightSync(int distance, bool decelerate, int tolerance)
+void drive::straightSync(int distance, int power, int tolerance)
 {
     // calculate number of encoder ticks needed
     const int target = distance * 180 * PI_RECIPROCAL / wheelRadius;
 
-    if (decelerate)
+    if (power == 0)
     {
         PID pid;
         pid.init(2, 0, 1);
@@ -109,7 +109,8 @@ void drive::straightSync(int distance, bool decelerate, int tolerance)
     }
     else
     {
-        const int power = distance < 0 ? -127 : 127;
+        // invert power based on direction of distance
+        power = distance < 0 ? -power : power;
         left(power);
         right(power);
 
