@@ -72,15 +72,15 @@ static void flagsParkClose(Color color)
     // from previous tests, the robot will have its back wheels touching the
     //  starting tile by now
 
-    // drive so we're inline with the platforms
-    drive::straightSync(-400, 127);
-
-    // aim at the platforms
-    if (color == LEFT) drive::turnSync(90, 0, 127);
-    else drive::turnSync(-90, 0, 127);
-
+    // turn around so we're not hitting the platform/walls with the cap intake
+    drive::turnSync(180, 0, 127);
+    // go back to the starting tile
+    drive::straightSync(150, 127);
+    // arc around to be inline the platform
+    if (color == LEFT) drive::turnSync(-90, 120, 127);
+    else drive::turnSync(90, 120, 127);
     // drive straight into it
-    drive::straightSync(400, 127);
+    drive::straightSync(350, 127);
 }
 
 // declared in main.hpp
