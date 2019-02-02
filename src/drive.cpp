@@ -188,7 +188,13 @@ void drive::turnSync(int angle, int radius, int outer, int tolerance)
             const int leftPower = pid.update(ticks, MOTOR_DELAY);
             int rightPower = leftPower;
             if (angle > 0) rightPower *= innerRatio;
-            if (angle < 0) rightPower /= innerRatio;
+            else leftPower *= innerRatio;
+            if (radius < 0)
+            {
+                // innerRatio should already be negative so scale the other side
+                if (angle > 0) leftPower = -leftPower;
+                else rightPower = -rightPower;
+            }
             left(leftPower);
             right(rightPower);
             taskDelayUntil(&wakeTime, MOTOR_DELAY);
