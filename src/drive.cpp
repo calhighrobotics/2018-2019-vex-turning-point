@@ -15,8 +15,6 @@ using namespace sensor;
 
 /** Omni wheel radius in 1/16in. */
 static constexpr int wheelRadius = 32;
-/** Distance between wheels in 1/16in. */
-static constexpr int botRadius = 120;
 
 /** Left drive train encoder. */
 static Encoder leftEnc = nullptr;
