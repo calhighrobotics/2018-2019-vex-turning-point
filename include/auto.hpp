@@ -7,7 +7,7 @@ namespace auton
 /** Autonomous programs. */
 enum Auton
 {
-    NOTHING, FLAGS_CLOSE, FLAGS_PARK_CLOSE_RED, FLAGS_PARK_CLOSE_BLUE,
+    NOTHING, TEST, FLAGS_CLOSE, FLAGS_PARK_CLOSE_RED, FLAGS_PARK_CLOSE_BLUE,
     NUM_AUTONS
 };
 

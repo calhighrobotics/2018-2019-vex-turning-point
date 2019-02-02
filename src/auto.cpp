@@ -20,8 +20,8 @@ enum Color
 
 const char* auton::autonNames[NUM_AUTONS][2]
 {
-    {"Nothing", ""}, {"Flags Close", ""}, {"Flags Park Close", "Red"},
-    {"Flags Park Close", "Blue"}
+    {"Nothing", ""}, {"Test Program", ""}, {"Flags Close", ""},
+    {"Flags Park Close", "Red"}, {"Flags Park Close", "Blue"}
 };
 
 /** Current auton program. */
@@ -41,6 +41,12 @@ void auton::setAuton(Auton value)
 static void await(TaskHandle task)
 {
     while (taskGetState(task) != TASK_DEAD) delay(MOTOR_DELAY);
+}
+
+static void test()
+{
+    // test auton turn
+    drive::turnSync(90, botRadius, 127);
 }
 
 /** Target flags from the front tile. */
@@ -96,6 +102,9 @@ void autonomous()
         case NOTHING:
             // nothing except setup the cap intake
             capIntake::deploySync();
+            break;
+        case TEST:
+            test();
             break;
         case FLAGS_CLOSE:
             flagsClose();
