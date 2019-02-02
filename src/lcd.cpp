@@ -76,7 +76,7 @@ void lcdEventLoop()
     {
         MAIN, BATTERY, AUTON_SELECT, LIFT_POS, PID_ENABLE, NUM_STATES
     };
-    static LCDState state = LIFT_POS;
+    static LCDState state = AUTON_SELECT;
 
     buttons.poll();
     lcdClear(port);
