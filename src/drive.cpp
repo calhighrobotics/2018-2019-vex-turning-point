@@ -92,9 +92,9 @@ void drive::straightSync(int distance, bool decelerate, int tolerance)
         int ticks;
         encoderReset(leftEnc);
         unsigned long wakeTime = millis();
-        while (abs(target - (ticks = encoderGet(leftEnc))) > tolerance)
+        while (abs(ticks = encoderGet(leftEnc)) < abs(target) - tolerance)
         {
-            print("straight: ");
+            print("straight pid: ");
             const int power = pid.update(ticks, MOTOR_DELAY);
             left(power);
             right(power);
@@ -112,9 +112,9 @@ void drive::straightSync(int distance, bool decelerate, int tolerance)
 
         int ticks;
         encoderReset(leftEnc);
-        while (abs(target - (ticks = encoderGet(leftEnc))) > tolerance)
+        while (abs(ticks = encoderGet(leftEnc)) < abs(target) - tolerance)
         {
-            printf("straight no pid: target=%d, enc=%d,", target, ticks);
+            printf("straight no pid: target=%d, enc=%d\n", target, ticks);
             delay(MOTOR_DELAY);
         }
     }
@@ -161,7 +161,7 @@ void drive::turnSync(int angle, int radius, int outer, int tolerance)
         (radius + botRadius);
 
     // calculate left encoder target ticks
-    long target;
+    int target;
     if (angle > 0) target = (radius + botRadius) * angle / wheelRadius;
     else target = (radius - botRadius) * angle / wheelRadius;
 
@@ -180,9 +180,9 @@ void drive::turnSync(int angle, int radius, int outer, int tolerance)
         int ticks;
         encoderReset(leftEnc);
         unsigned long wakeTime = millis();
-        while (abs(target - (ticks = encoderGet(leftEnc))) > tolerance)
+        while (abs(ticks = encoderGet(leftEnc)) < abs(target) - tolerance)
         {
-            print("turn: ");
+            print("turn pid: ");
             const int leftPower = pid.update(ticks, MOTOR_DELAY);
             int rightPower = leftPower;
             if (angle > 0) rightPower *= innerRatio;
@@ -204,9 +204,11 @@ void drive::turnSync(int angle, int radius, int outer, int tolerance)
 
         left(leftPower);
         right(rightPower);
+        int ticks;
         encoderReset(leftEnc);
-        while (abs(target - encoderGet(leftEnc)) > tolerance)
+        while (abs(ticks = encoderGet(leftEnc)) < abs(target) - tolerance)
         {
+            printf("turn no pid: target=%d, enc=%d\n", target, ticks);
             delay(MOTOR_DELAY);
         }
     }
