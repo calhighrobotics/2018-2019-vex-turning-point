@@ -137,11 +137,6 @@ static void capsFar(Color color)
 // declared in main.hpp
 void autonomous()
 {
-    initMotors();
-    lcd::init();
-    drive::initEncoders();
-    lift::enablePid();
-
     switch (autonState)
     {
         case NOTHING:
